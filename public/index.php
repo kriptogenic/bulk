@@ -9,4 +9,4 @@ $redis = new Redis();
 
 $redis->connect(getenv('REDIS_URL'));
 
-$redis->append('key', $p);
+$redis->set('key', $p);
