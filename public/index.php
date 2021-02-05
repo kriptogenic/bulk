@@ -1,16 +1,16 @@
 <?php
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
 
+require __DIR__ . '/../vendor/autoload.php';
 
-//echo "Hello world";
+$app = AppFactory::create();
 
-$p = $_GET['sa'] ?? null;
+$app->get('/', function (Request $request, Response $response, array $args) {
+    $name = $args['name'];
+    $response->getBody()->write("Hello, $name");
+    return $response;
+});
 
-$redis = new Redis();
-
-$redis_conf = parse_url(getenv('REDIS_URL'));
-
-var_dump($redis->connect($redis_conf['host'], $redis_conf['port']));
-
-$redis->auth($redis_conf['pass']);
-
-var_dump($redis->set('key', $p));
+$app->run();
