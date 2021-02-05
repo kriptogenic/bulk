@@ -14,5 +14,7 @@
             "App\\": "app"
         }
     },
-    "require": {}
+    "require": {
+        "ext-redis": "*"
+    }
 }
