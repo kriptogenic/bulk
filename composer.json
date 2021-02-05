@@ -17,6 +17,7 @@
     "require": {
         "php": "~8.0",
         "ext-redis": "*",
-        "slim/slim": "^4.7"
+        "slim/slim": "^4.7",
+        "slim/psr7": "^1.3"
     }
 }
