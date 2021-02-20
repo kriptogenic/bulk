@@ -16,8 +16,15 @@
     },
     "require": {
         "php": "~8.0",
+        "ext-curl": "*",
         "ext-redis": "*",
+        "ext-mbstring": "*",
+        "ext-swoole": "*",
         "slim/slim": "^4.7",
-        "slim/psr7": "^1.3"
+        "slim/psr7": "^1.3",
+        "vlucas/valitron": "^1.4",
+        "cekta/di": "^0.2.1",
+        "swlib/saber": "^1.0",
+        "mix/monolog": "^2.2"
     }
 }

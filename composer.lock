@@ -4,8 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5800f5ff505167d0243e9086d4e96c19",
+    "content-hash": "791ed698b6f34750e30ac252b4279a1e",
     "packages": [
+        {
+            "name": "cekta/di",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cekta/di.git",
+                "reference": "53c114914e3c9197ff51c6f1e13e086fb88f5c28"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cekta/di/zipball/53c114914e3c9197ff51c6f1e13e086fb88f5c28",
+                "reference": "53c114914e3c9197ff51c6f1e13e086fb88f5c28",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "psr/cache": "^1.0",
+                "psr/container": "^1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.3",
+                "nunomaduro/phpinsights": "^1.9",
+                "phpmd/phpmd": "^2.7",
+                "phpstan/phpstan": "^0.11.8",
+                "phpunit/phpunit": "^8.1",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cekta\\DI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Evgeniy Kuvshinov",
+                    "email": "smpl@itmywork.com"
+                }
+            ],
+            "description": "psr/container implementation for humans",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "dependency injection",
+                "di",
+                "psr container"
+            ],
+            "support": {
+                "issues": "https://github.com/cekta/di/issues",
+                "source": "https://github.com/cekta/di/tree/master"
+            },
+            "time": "2019-12-04T16:31:10+00:00"
+        },
         {
             "name": "fig/http-message-util",
             "version": "1.1.5",
@@ -63,6 +121,256 @@
             "time": "2020-11-24T22:02:12+00:00"
         },
         {
+            "name": "mix/bean",
+            "version": "v2.2.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mix-php/bean.git",
+                "reference": "521705fe907f510086f1d945dea2538376764211"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mix-php/bean/zipball/521705fe907f510086f1d945dea2538376764211",
+                "reference": "521705fe907f510086f1d945dea2538376764211",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "php-di/phpdoc-reader": "~2.1",
+                "psr/container": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mix\\Bean\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu,jian",
+                    "email": "coder.keda@gmail.com"
+                }
+            ],
+            "description": "DI, IoC container, reference spring bean",
+            "homepage": "https://openmix.org/",
+            "keywords": [
+                "bean",
+                "di",
+                "ico",
+                "mix"
+            ],
+            "support": {
+                "issues": "https://github.com/mix-php/bean/issues",
+                "source": "https://github.com/mix-php/bean/tree/v2.2.14"
+            },
+            "time": "2020-09-14T02:39:06+00:00"
+        },
+        {
+            "name": "mix/console",
+            "version": "v2.2.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mix-php/console.git",
+                "reference": "456eb6ddaeed98157cc92eb8a42ba2c896da5cb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mix-php/console/zipball/456eb6ddaeed98157cc92eb8a42ba2c896da5cb2",
+                "reference": "456eb6ddaeed98157cc92eb8a42ba2c896da5cb2",
+                "shasum": ""
+            },
+            "require": {
+                "mix/bean": "~2.2.0",
+                "php": ">=7.0.0",
+                "psr/event-dispatcher": "^1.0",
+                "psr/log": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mix\\Console\\": "src/"
+                },
+                "classmap": [
+                    "src/Mix.php"
+                ],
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu,jian",
+                    "email": "coder.keda@gmail.com"
+                }
+            ],
+            "description": "Command line console program development library",
+            "homepage": "https://openmix.org/",
+            "keywords": [
+                "cli",
+                "console",
+                "mix"
+            ],
+            "support": {
+                "issues": "https://github.com/mix-php/console/issues",
+                "source": "https://github.com/mix-php/console/tree/v2.2.17"
+            },
+            "time": "2020-12-14T08:08:11+00:00"
+        },
+        {
+            "name": "mix/monolog",
+            "version": "v2.2.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mix-php/monolog.git",
+                "reference": "d5dbd21708ab0aad67d545e129d1299f0e4818f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mix-php/monolog/zipball/d5dbd21708ab0aad67d545e129d1299f0e4818f5",
+                "reference": "d5dbd21708ab0aad67d545e129d1299f0e4818f5",
+                "shasum": ""
+            },
+            "require": {
+                "mix/console": "~2.2.0",
+                "monolog/monolog": "^2.0",
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mix\\Monolog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu,jian",
+                    "email": "coder.keda@gmail.com"
+                }
+            ],
+            "description": "Monolog support Swoole coroutine and cli console printing",
+            "homepage": "https://openmix.org/",
+            "keywords": [
+                "coroutine",
+                "log",
+                "mix",
+                "monolog",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/mix-php/monolog/issues",
+                "source": "https://github.com/mix-php/monolog/tree/v2.2.14"
+            },
+            "time": "2020-09-14T02:39:06+00:00"
+        },
+        {
+            "name": "monolog/monolog",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "psr/log": "^1.0.1"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+                "doctrine/couchdb": "~1.0@dev",
+                "elasticsearch/elasticsearch": "^7",
+                "graylog2/gelf-php": "^1.4.2",
+                "mongodb/mongodb": "^1.8",
+                "php-amqplib/php-amqplib": "~2.4",
+                "php-console/php-console": "^3.1.3",
+                "phpspec/prophecy": "^1.6.1",
+                "phpstan/phpstan": "^0.12.59",
+                "phpunit/phpunit": "^8.5",
+                "predis/predis": "^1.1",
+                "rollbar/rollbar": "^1.3",
+                "ruflin/elastica": ">=0.90 <7.0.1",
+                "swiftmailer/swiftmailer": "^5.3|^6.0"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
+                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+                "ext-mbstring": "Allow to work properly with unicode symbols",
+                "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "https://seld.be"
+                }
+            ],
+            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+            "homepage": "https://github.com/Seldaek/monolog",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "support": {
+                "issues": "https://github.com/Seldaek/monolog/issues",
+                "source": "https://github.com/Seldaek/monolog/tree/2.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Seldaek",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-12-14T13:15:25+00:00"
+        },
+        {
             "name": "nikic/fast-route",
             "version": "v1.3.0",
             "source": {
@@ -111,6 +419,97 @@
                 "source": "https://github.com/nikic/FastRoute/tree/master"
             },
             "time": "2018-02-13T20:26:39+00:00"
+        },
+        {
+            "name": "php-di/phpdoc-reader",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PhpDocReader.git",
+                "reference": "66daff34cbd2627740ffec9469ffbac9f8c8185c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PhpDocReader/zipball/66daff34cbd2627740ffec9469ffbac9f8c8185c",
+                "reference": "66daff34cbd2627740ffec9469ffbac9f8c8185c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "mnapoli/hard-mode": "~0.3.0",
+                "phpunit/phpunit": "^8.5|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpDocReader\\": "src/PhpDocReader"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PhpDocReader parses @var and @param values in PHP docblocks (supports namespaced class names with the same resolution rules as PHP)",
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PhpDocReader/issues",
+                "source": "https://github.com/PHP-DI/PhpDocReader/tree/2.2.1"
+            },
+            "time": "2020-10-12T12:39:22+00:00"
+        },
+        {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/cache/tree/master"
+            },
+            "time": "2016-08-06T20:24:11+00:00"
         },
         {
             "name": "psr/container",
@@ -164,6 +563,56 @@
                 "source": "https://github.com/php-fig/container/tree/master"
             },
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/event-dispatcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/event-dispatcher.git",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Standard interfaces for event handling.",
+            "keywords": [
+                "events",
+                "psr",
+                "psr-14"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/event-dispatcher/issues",
+                "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
+            },
+            "time": "2019-01-08T18:20:26+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -438,6 +887,57 @@
             "time": "2020-03-23T09:12:05+00:00"
         },
         {
+            "name": "psr/simple-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/master"
+            },
+            "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
             "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
@@ -677,6 +1177,172 @@
             "time": "2020-12-01T19:41:22+00:00"
         },
         {
+            "name": "swlib/http",
+            "version": "v1.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swlib/http.git",
+                "reference": "e97d9d05b741d4ee7ef58824a280acf983354d5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swlib/http/zipball/e97d9d05b741d4ee7ef58824a280acf983354d5e",
+                "reference": "e97d9d05b741d4ee7ef58824a280acf983354d5e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "psr/http-message": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Swlib\\Http\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "twosee",
+                    "email": "twose@qq.com"
+                }
+            ],
+            "description": "Swlib-HTTP base class repository, PSR implementation",
+            "keywords": [
+                "http",
+                "php",
+                "psr7",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/swlib/http/issues",
+                "source": "https://github.com/swlib/http/tree/v1.x"
+            },
+            "time": "2020-08-15T10:36:45+00:00"
+        },
+        {
+            "name": "swlib/saber",
+            "version": "v1.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swlib/saber.git",
+                "reference": "ebdcd68c61709024f0deee07fef87b070d79dd2d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swlib/saber/zipball/ebdcd68c61709024f0deee07fef87b070d79dd2d",
+                "reference": "ebdcd68c61709024f0deee07fef87b070d79dd2d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "swlib/http": "^1.0",
+                "swlib/util": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/Saber.php",
+                    "src/SaberGM.php"
+                ],
+                "psr-4": {
+                    "Swlib\\Saber\\": "src"
+                },
+                "files": [
+                    "src/include/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "twosee",
+                    "email": "twose@qq.com"
+                }
+            ],
+            "description": "Swoole coroutine HTTP client",
+            "keywords": [
+                "ajax",
+                "axios",
+                "client",
+                "coroutine",
+                "curl",
+                "http",
+                "php",
+                "psr7",
+                "requests",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/swlib/saber/issues",
+                "source": "https://github.com/swlib/saber/tree/v1.0.17"
+            },
+            "time": "2021-01-06T09:38:15+00:00"
+        },
+        {
+            "name": "swlib/util",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swlib/util.git",
+                "reference": "300f551753702f5bfcbfb814d53bdbf057719a43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swlib/util/zipball/300f551753702f5bfcbfb814d53bdbf057719a43",
+                "reference": "300f551753702f5bfcbfb814d53bdbf057719a43",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swlib\\Util\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "twosee",
+                    "email": "twose@qq.com"
+                }
+            ],
+            "description": "Swlib Toolkit",
+            "keywords": [
+                "php",
+                "swlib",
+                "swoole",
+                "util"
+            ],
+            "support": {
+                "issues": "https://github.com/swlib/util/issues",
+                "source": "https://github.com/swlib/util/tree/v1.0.3"
+            },
+            "time": "2020-08-24T10:00:58+00:00"
+        },
+        {
             "name": "symfony/polyfill-php80",
             "version": "v1.22.0",
             "source": {
@@ -758,6 +1424,65 @@
                 }
             ],
             "time": "2021-01-07T16:49:33+00:00"
+        },
+        {
+            "name": "vlucas/valitron",
+            "version": "v1.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vlucas/valitron.git",
+                "reference": "81515dcc951e1f636a1a18ece2f4154dfa123438"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/81515dcc951e1f636a1a18ece2f4154dfa123438",
+                "reference": "81515dcc951e1f636a1a18ece2f4154dfa123438",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.5 || ^6.5"
+            },
+            "suggest": {
+                "ext-mbstring": "It can support the multiple bytes string length."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Valitron\\": "src/Valitron"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Vance Lucas",
+                    "email": "vance@vancelucas.com",
+                    "homepage": "http://www.vancelucas.com"
+                }
+            ],
+            "description": "Simple, elegant, stand-alone validation library with NO dependencies",
+            "homepage": "http://github.com/vlucas/valitron",
+            "keywords": [
+                "valid",
+                "validation",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/vlucas/valitron/issues",
+                "source": "https://github.com/vlucas/valitron/tree/v1.4.9"
+            },
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/vlucas/valitron",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-12-01T11:14:45+00:00"
         }
     ],
     "packages-dev": [],
@@ -768,7 +1493,10 @@
     "prefer-lowest": false,
     "platform": {
         "php": "~8.0",
-        "ext-redis": "*"
+        "ext-curl": "*",
+        "ext-redis": "*",
+        "ext-mbstring": "*",
+        "ext-swoole": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
