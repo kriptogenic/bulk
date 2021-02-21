@@ -1,6 +1,6 @@
 <?php
 define('TOKEN', getenv('TEST_TOKEN'));
-\Swoole\Timer::tick(1000 * 5, function (){
+\Swoole\Timer::tick(1000 * 60  * 5, function (){
     $s = curl_init();
     curl_setopt_array($s, [
             CURLOPT_URL => 'https://api.telegram.org/bot' . TOKEN . '/' . 'sendMessage',
