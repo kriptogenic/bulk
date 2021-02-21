@@ -3,7 +3,7 @@ define('TOKEN', getenv('TEST_TOKEN'));
 \Swoole\Timer::tick(1000 * 5, function (){
     $s = curl_init();
     curl_setopt_array($s, [
-            CURLOPT_URL => $this->apiEndpoint . TOKEN . '/' . 'sendMessage',
+            CURLOPT_URL => 'https://api.telegram.org/bot' . TOKEN . '/' . 'sendMessage',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_HEADER => false,
