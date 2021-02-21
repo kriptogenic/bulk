@@ -8,6 +8,7 @@ $http->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Respo
         $response->setStatusCode(429);
     }
 
+
     var_dump($request);
     $response->end("<h1>Hello World. </h1>");
 
