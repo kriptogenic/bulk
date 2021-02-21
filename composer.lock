@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "207d50a7a379556dfa4c2e955f6ecf6a",
+    "content-hash": "791ed698b6f34750e30ac252b4279a1e",
     "packages": [
         {
             "name": "cekta/di",
@@ -1495,7 +1495,8 @@
         "php": "~8.0",
         "ext-curl": "*",
         "ext-redis": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-swoole": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
