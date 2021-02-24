@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Memory;
 
 use InvalidArgumentException;
@@ -13,9 +15,9 @@ class Redis
 
     private PHPRedis $connection;
 
-    public function __construct(string $conncetion_url)
+    public function __construct(string $connection_url)
     {
-        $connection_config = parse_url($conncetion_url);
+        $connection_config = parse_url($connection_url);
 
         if (!is_array($connection_config)) {
             throw new InvalidArgumentException('Wrong connection url');

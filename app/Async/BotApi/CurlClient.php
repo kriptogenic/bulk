@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Async\BotApi;
 
 use Psr\Log\LoggerInterface;
@@ -37,7 +39,7 @@ class CurlClient implements Client
         $response = curl_exec($this->curl);
         if ($response === FALSE) {
             $this->logger->error(new \Exception(
-                curl_error($this->curl) . json_encode([$token, $method, $data])
+                curl_error($this->curl) . json_encode([(int)$token, $method, $data])
             ));
             return new Message(Message::STATUS_FAILED, $chat_id);
         }
