@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Handlers;
 
 use App\Http\Exceptions\ApiException;
@@ -8,7 +10,7 @@ use App\Http\Exceptions\InvalidTokenException;
 use App\Http\Exceptions\TelegramMethodCallException;
 use App\Http\Exceptions\ValidationException;
 use App\Http\Telegram;
-use App\Memory\Redis;
+use App\Memory\TaskManager;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,11 +18,11 @@ use Valitron\Validator;
 
 class SendMessageHandler
 {
-    private Redis $redis;
+    private TaskManager $redis;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->redis = new Redis($container->get('redis_url'));
+        $this->redis = new TaskManager($container->get('redis_url'));
     }
 
     /**
@@ -28,7 +30,7 @@ class SendMessageHandler
      * @param ResponseInterface $response
      * @return ResponseInterface
      * @throws ValidationException|InvalidJsonInput
-     * @throws TelegramMethodCallException|InvalidTokenException
+     * @throws TelegramMethodCallException|InvalidTokenException|ApiException
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -44,7 +46,7 @@ class SendMessageHandler
 
         $bot_id = $me['result']['id'];
 
-        if ($this->redis->taskExists($bot_id)) {
+        if ($this->redis->exists($bot_id)) {
             throw new ApiException('Task already exists for this bot', 429);
         }
 
@@ -61,7 +63,7 @@ class SendMessageHandler
 
         $chats_id = array_unique($body['chats_id']);
 
-        $this->redis->setData($bot_id, $body['token'], 'sendMessage', $data, $chats_id);
+        $this->redis->add($bot_id, $body['token'], 'sendMessage', 10, $data, $chats_id);
 
         $response->getBody()->write('dd');
         return $response;
@@ -108,7 +110,7 @@ class SendMessageHandler
         return $body;
     }
 
-    private function only(array $array, array $keys)
+    private function only(array $array, array $keys): array
     {
         $result = [];
 

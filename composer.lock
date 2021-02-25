@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "207d50a7a379556dfa4c2e955f6ecf6a",
+    "content-hash": "a703785aa8c262296daac15a90df0688",
     "packages": [
         {
             "name": "cekta/di",
@@ -1177,172 +1177,6 @@
             "time": "2020-12-01T19:41:22+00:00"
         },
         {
-            "name": "swlib/http",
-            "version": "v1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/swlib/http.git",
-                "reference": "e97d9d05b741d4ee7ef58824a280acf983354d5e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/swlib/http/zipball/e97d9d05b741d4ee7ef58824a280acf983354d5e",
-                "reference": "e97d9d05b741d4ee7ef58824a280acf983354d5e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1",
-                "psr/http-message": "~1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~7"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "Swlib\\Http\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "twosee",
-                    "email": "twose@qq.com"
-                }
-            ],
-            "description": "Swlib-HTTP base class repository, PSR implementation",
-            "keywords": [
-                "http",
-                "php",
-                "psr7",
-                "swoole"
-            ],
-            "support": {
-                "issues": "https://github.com/swlib/http/issues",
-                "source": "https://github.com/swlib/http/tree/v1.x"
-            },
-            "time": "2020-08-15T10:36:45+00:00"
-        },
-        {
-            "name": "swlib/saber",
-            "version": "v1.0.17",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/swlib/saber.git",
-                "reference": "ebdcd68c61709024f0deee07fef87b070d79dd2d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/swlib/saber/zipball/ebdcd68c61709024f0deee07fef87b070d79dd2d",
-                "reference": "ebdcd68c61709024f0deee07fef87b070d79dd2d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1",
-                "swlib/http": "^1.0",
-                "swlib/util": "^1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~7"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/Saber.php",
-                    "src/SaberGM.php"
-                ],
-                "psr-4": {
-                    "Swlib\\Saber\\": "src"
-                },
-                "files": [
-                    "src/include/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "twosee",
-                    "email": "twose@qq.com"
-                }
-            ],
-            "description": "Swoole coroutine HTTP client",
-            "keywords": [
-                "ajax",
-                "axios",
-                "client",
-                "coroutine",
-                "curl",
-                "http",
-                "php",
-                "psr7",
-                "requests",
-                "swoole"
-            ],
-            "support": {
-                "issues": "https://github.com/swlib/saber/issues",
-                "source": "https://github.com/swlib/saber/tree/v1.0.17"
-            },
-            "time": "2021-01-06T09:38:15+00:00"
-        },
-        {
-            "name": "swlib/util",
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/swlib/util.git",
-                "reference": "300f551753702f5bfcbfb814d53bdbf057719a43"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/swlib/util/zipball/300f551753702f5bfcbfb814d53bdbf057719a43",
-                "reference": "300f551753702f5bfcbfb814d53bdbf057719a43",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Swlib\\Util\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "twosee",
-                    "email": "twose@qq.com"
-                }
-            ],
-            "description": "Swlib Toolkit",
-            "keywords": [
-                "php",
-                "swlib",
-                "swoole",
-                "util"
-            ],
-            "support": {
-                "issues": "https://github.com/swlib/util/issues",
-                "source": "https://github.com/swlib/util/tree/v1.0.3"
-            },
-            "time": "2020-08-24T10:00:58+00:00"
-        },
-        {
             "name": "symfony/polyfill-php80",
             "version": "v1.22.1",
             "source": {
@@ -1487,7 +1321,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,

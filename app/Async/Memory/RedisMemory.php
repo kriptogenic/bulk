@@ -11,9 +11,9 @@ class RedisMemory
     }
 
     /**
-     * @return int[]
+     * @return ?int[]
      */
-    public function getChatsId(int $bot_id, int $count): array
+    public function getChatsId(int $bot_id, int $count): ?array
     {
         $connection = $this->connectionPool->get();
         $chats_id = $connection->sPop('chats_id:'.$bot_id, $count);
@@ -27,6 +27,13 @@ class RedisMemory
         $meta = $connection->hGetAll($bot_id);
         $this->connectionPool->put($connection);
         return $meta;
+    }
+
+    public function getMethodData(int $bot_id): array
+    {
+        $connection = $this->connectionPool->get();
+        $connection->hGetAll('data:' . $bot_id);
+        $this->connectionPool->put($connection);
     }
 
     public function putResult(int $bot_id, array $result)

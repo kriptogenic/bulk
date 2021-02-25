@@ -33,6 +33,8 @@ class Kernel
         $logger = $this->createLogger();
         $botApiPool = new Pool($logger);
         $sender = new Sender($botApiPool);
+
+        $this->runWorkers($senderChannel, $sender, $memory, 20);
     }
 
     private function runReactor(RedisQueue $queue, Channel $senderChannel, Channel $killSignal)
@@ -43,9 +45,11 @@ class Kernel
                     break;
 
                 $chat_id = $queue->deque();
+                if (is_null($chat_id)) {
+                    System::sleep(2);
+                    continue;
+                }
                 $senderChannel->push($chat_id);
-
-                System::sleep(2);
             }
         });
     }
@@ -56,7 +60,16 @@ class Kernel
             go(static function () use ($senderChannel, $sender, $memory) {
                 $bot_id = $senderChannel->pop();
                 $meta = $memory->getMeta($bot_id);
+                $data = $memory->getMethodData($bot_id);
 
+                while (true) {
+                    $chats_id = $memory->getChatsId($bot_id, $meta['count']);
+                    if (empty($chats_id)) {
+                        break;
+                    }
+
+                    $sender->send($chats_id, $meta['token'], $meta['method'], $data);
+                }
             });
         }
     }

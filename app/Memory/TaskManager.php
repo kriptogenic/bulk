@@ -7,7 +7,7 @@ namespace App\Memory;
 use InvalidArgumentException;
 use Redis as PHPRedis;
 
-class Redis
+class TaskManager
 {
     private string $host;
     private int $port;
@@ -43,30 +43,38 @@ class Redis
         }
     }
 
-    public function setData(int $bot_id, string $token, string $method, array $data, array $chats_id)
+    public function add(int $bot_id, string $token, string $method, int $bulk_size, array $data, array $chats_id)
     {
         $this->connection->hMSet('request_data:' . $bot_id, $data);
 
         $this->connection->hMSet('bot_data:' . $bot_id, [
             'token' => $token,
-            'method' => $method
+            'method' => $method,
+            'bulk_size' => $bulk_size
         ]);
         $this->connection->sAdd('chats_id:' . $bot_id, ...$chats_id);
 
-        $this->connection->sAdd('pending', $bot_id);
+        $this->connection->zAdd('pending', time(), $bot_id);
     }
 
-    public function taskExists(int $bot_id)
+    public function exists(int $bot_id): bool
     {
-        return $this->connection->sIsMember('pending', $bot_id)
-            || $this->connection->sIsMember('processing', $bot_id);
+        if ($this->connection->zScore('pending', $bot_id) !== false) {
+            return true;
+        }
+
+        if ($this->connection->zScore('processing', $bot_id) !== false) {
+            return true;
+        }
+
+        return false;
     }
 
-    public function delData(int $bot_id)
+    public function remove(int $bot_id)
     {
         $this->connection->del('request_data:' . $bot_id,
             'bot_data:' . $bot_id, 'chats_id:' . $bot_id);
-        $this->connection->sRem('pending', $bot_id);
-        $this->connection->sRem('processing', $bot_id);
+        $this->connection->zRem('pending', $bot_id);
+        $this->connection->zRem('processing', $bot_id);
     }
 }

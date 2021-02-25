@@ -4,7 +4,7 @@ namespace App\Http;
 
 use App\Http\Handlers\SendMessageHandler;
 use App\Http\Middlewares\ApiErrorHandlerMiddleware;
-use App\Memory\Redis;
+use App\Memory\TaskManager;
 use Cekta\DI\Container;
 use Cekta\DI\Provider\KeyValue;
 use Psr\Container\ContainerInterface;
@@ -61,8 +61,8 @@ class App
         })->add(new ApiErrorHandlerMiddleware($this->slim->getResponseFactory()));
 
         $this->slim->post('/stopTask/{bot_id}', function (Request $request, Response $response, $args) {
-            $redis = new Redis('@localhost:6379');
-            $redis->delData($args['bot_id']);
+            $redis = new TaskManager('@localhost:6379');
+            $redis->remove($args['bot_id']);
             return $response;
         });
     }
