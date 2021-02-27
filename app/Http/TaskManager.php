@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Memory;
+namespace App\Http;
 
 use InvalidArgumentException;
 use Redis as PHPRedis;

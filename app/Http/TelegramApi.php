@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http;
 
 use Exception;
 
-class Telegram
+class TelegramApi
 {
     private string $apiEndpoint;
 
@@ -13,7 +15,7 @@ class Telegram
         $this->apiEndpoint = $apiEndpoint ?? 'https://api.telegram.org/bot';
     }
 
-    private function httpApiCall(string $token, string $method, array $params = []): array
+    public function httpApiCall(string $token, string $method, array $params = []): array
     {
         $ch = curl_init($this->apiEndpoint . $token . '/' . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -41,11 +43,5 @@ class Telegram
     public function getMe(string $token)
     {
         return $this->httpApiCall($token, 'getMe');
-    }
-
-    public function sendMessage(string $token, int $chat_id, array $data)
-    {
-        $data['chat_id'] = $chat_id;
-        return $this->httpApiCall($token, 'sendMessage', $data);
     }
 }
