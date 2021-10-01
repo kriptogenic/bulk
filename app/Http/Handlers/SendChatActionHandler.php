@@ -36,9 +36,9 @@ class SendChatActionHandler
     private function validate($action)
     {
         $rules = new Rules([
-            new Required(),
-            new HasLength(),
-            new Enum(['typing', 'upload_photo', 'record_video', 'upload_video', 'record_voice', 'upload_voice',
+            Required::rule(),
+            HasLength::rule(),
+            Enum::rule(['typing', 'upload_photo', 'record_video', 'upload_video', 'record_voice', 'upload_voice',
                          'upload_document', 'find_location', 'record_video_note', 'upload_video_note'])
         ]);
         //

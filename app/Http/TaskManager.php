@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http;
 
 use InvalidArgumentException;
-use Redis as PHPRedis;
+use Redis;
 
 class TaskManager
 {
@@ -13,7 +13,7 @@ class TaskManager
     private int $port;
     private ?string $password;
 
-    private PHPRedis $connection;
+    private Redis $connection;
 
     public function __construct(string $connection_url)
     {
@@ -34,7 +34,7 @@ class TaskManager
         $this->port = $connection_config['port'];
 
         // Creating connection
-        $this->connection = new PHPRedis();
+        $this->connection = new Redis();
         $this->connection->connect($this->host, $this->port);
 
         if (!empty($connection_config['pass'])) {

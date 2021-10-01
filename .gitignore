@@ -4,3 +4,4 @@ public/.htaccess
 bin/users.php
 bin/result.json
 tst.php
+.env

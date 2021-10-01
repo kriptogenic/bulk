@@ -25,7 +25,7 @@ class Kernel
         $this->registerShutdownFunction($killSignal);
 
         $senderChannel = new Channel();
-        $redisPool = new RedisConnectionPool('@localhost:6379', 11);
+        $redisPool = new RedisConnectionPool('@172.26.48.1:6379', 11);
         $queue = new RedisQueue($redisPool->get());
         $this->runReactor($queue, $senderChannel, $killSignal);
 
@@ -63,12 +63,12 @@ class Kernel
                 $data = $memory->getMethodData($bot_id);
 
                 while (true) {
-                    $chats_id = $memory->getChatsId($bot_id, $meta['count']);
+                    $chats_id = $memory->getChatsId($bot_id, $meta->bulkSize);
                     if (empty($chats_id)) {
                         break;
                     }
 
-                    $sender->send($chats_id, $meta['token'], $meta['method'], $data);
+                    $sender->send($chats_id, $meta->token, $meta->method, $data);
                 }
             });
         }

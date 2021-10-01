@@ -8,10 +8,15 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule;
 use Yiisoft\Validator\ValidationContext;
 
-class Enum extends Rule
+final class Enum extends Rule
 {
-    public function __construct(private array $list)
+    private array $list;
+
+    public static function rule(array $list): self
     {
+        $rule = new self();
+        $rule->list = $list;
+        return $rule;
     }
 
     protected function validateValue($value, ValidationContext $context = null): Result

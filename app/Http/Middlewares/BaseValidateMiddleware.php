@@ -41,7 +41,7 @@ class BaseValidateMiddleware implements MiddlewareInterface
 
         $this->validate($body);
         $bot_id = $this->getBotId($body['token']);
-        $this->checkDublicationTask($bot_id);
+        $this->checkDuplicationTask($bot_id);
 
         return $handler->handle($request->withParsedBody($body + ['bot_id' => $bot_id]));
     }
@@ -53,13 +53,13 @@ class BaseValidateMiddleware implements MiddlewareInterface
     {
         $results = $this->validator->validate(new NullableDataSet($body), [
             'token' => [
-                new Required(),
-                new HasLength()
+                Required::rule(),
+                HasLength::rule()
             ],
             'chats_id' => [
-                new Required(),
-                (new ArrayRule())->unique()->max(100_000),
-                new Each(new Rules([(new Number())->integer()])),
+                Required::rule(),
+                ArrayRule::rule()->unique()->max(10_000),
+                Each::rule(new Rules([Number::rule()->integer()])),
             ]
         ]);
 
@@ -82,7 +82,10 @@ class BaseValidateMiddleware implements MiddlewareInterface
         return $me['result']['id'];
     }
 
-    private function checkDublicationTask(int $bot_id)
+    /**
+     * @throws ApiException
+     */
+    private function checkDuplicationTask(int $bot_id)
     {
         if ($this->taskManager->exists($bot_id)) {
             throw new ApiException('Task already exists for this bot', 429);

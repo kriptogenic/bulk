@@ -29,6 +29,7 @@
         "cekta/di": "dev-master",
         "mix/monolog": "^2.2",
         "yiisoft/validator": "3.0.x-dev",
-        "nyholm/psr7": "^1.4"
+        "nyholm/psr7": "^1.4",
+        "vlucas/phpdotenv": "^5.3"
     }
 }

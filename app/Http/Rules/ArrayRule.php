@@ -15,6 +15,11 @@ class ArrayRule extends Rule
     private ?int $min = null;
     private ?int $max = null;
 
+    public static function rule(): self
+    {
+        return new self;
+    }
+
     public function validateValue($value, ValidationContext $context = null): Result
     {
         $result = new Result();

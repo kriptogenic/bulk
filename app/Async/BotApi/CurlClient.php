@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Async\BotApi;
 
+use Exception;
 use Psr\Log\LoggerInterface;
-use Swoole\Curl\Handler;
+use Swoole\Coroutine\Curl\Handle;
+use Throwable;
 
 class CurlClient implements Client
 {
     private string $apiEndpoint = 'https://api.telegram.org/bot';
 
-    private Handler $curl;
+    private Handle $curl;
 
     public function __construct(private LoggerInterface $logger)
     {
@@ -38,7 +40,7 @@ class CurlClient implements Client
 
         $response = curl_exec($this->curl);
         if ($response === FALSE) {
-            $this->logger->error(new \Exception(
+            $this->logger->error(new Exception(
                 curl_error($this->curl) . json_encode([(int)$token, $method, $data])
             ));
             return new Message(Message::STATUS_FAILED, $chat_id);
@@ -46,7 +48,7 @@ class CurlClient implements Client
 
         try {
             $json = json_decode($response, flags: JSON_THROW_ON_ERROR);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error($e);
             return new Message(Message::STATUS_FAILED, $chat_id);
         }
@@ -74,7 +76,7 @@ class CurlClient implements Client
             return new Message(Message::STATUS_TOO_MANY_REQUESTS, $chat_id, $json->parameters->retry_after);
         }
 
-        $this->logger->error(new \Exception($json));
+        $this->logger->error(new Exception($response));
 
         return new Message(Message::STATUS_FAILED, $chat_id);
     }

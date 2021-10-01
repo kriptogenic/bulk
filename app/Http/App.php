@@ -9,6 +9,7 @@ use App\Http\Handlers\SendMessageHandler;
 use App\Http\Middlewares\ApiErrorHandlerMiddleware;
 use App\Http\Middlewares\BaseValidateMiddleware;
 use App\Http\Middlewares\JsonBodyParserMiddleware;
+use Dotenv\Dotenv;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -60,8 +61,10 @@ class App
 
     private function getContainer() :ContainerInterface
     {
+        $dotenv = Dotenv::createImmutable(BASE_DIR);
+        $dotenv->load();
         $settings = [
-            'redis_url' => '@localhost:6379',
+            'redis_url' => sprintf("@%s:%s", $_ENV['REDIS_HOST'], $_ENV['REDIS_PORT']),
             'test_token' => '798987043:AAEFbSVifXq8POi5Sg4FlayAkrh7buJwcSs',
             'test_chat_id' => -1001176886276
         ];

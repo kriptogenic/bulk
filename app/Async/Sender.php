@@ -18,17 +18,14 @@ class Sender
         $this->pool = $pool;
     }
 
-    /**
-     * @param int[] $chats_id
-     * @return array
-     */
-    public function send(iterable $chats_id, string $token, string $method, array $data): array
+    public function send(array $chats_id, string $token, string $method, array $data): array
     {
         $start = microtime(true);
         $messages = new Channel();
         $n = count($chats_id);
         foreach ($chats_id as $chat_id) {
             go(function () use ($chat_id, $token, $method, $data, $messages){
+                $chat_id = intval($chat_id);
                 $bot = $this->pool->get();
                 $message = $bot->execute($token, $method, $chat_id, $data);
                 $this->pool->put($bot);
