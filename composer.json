@@ -25,7 +25,6 @@
         "ext-mbstring": "*",
         "slim/slim": "^4.7",
         "slim/psr7": "^1.3",
-        "vlucas/valitron": "^1.4",
         "cekta/di": "dev-master",
         "mix/monolog": "^2.2",
         "yiisoft/validator": "3.0.x-dev",
