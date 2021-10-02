@@ -9,6 +9,7 @@ use App\Http\Handlers\SendMessageHandler;
 use App\Http\Middlewares\ApiErrorHandlerMiddleware;
 use App\Http\Middlewares\BaseValidateMiddleware;
 use App\Http\Middlewares\JsonBodyParserMiddleware;
+use App\Http\Middlewares\NotFoundMiddleware;
 use Dotenv\Dotenv;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
@@ -77,7 +78,6 @@ class App
         })
             ->add(BaseValidateMiddleware::class)
             ->add(JsonBodyParserMiddleware::class)
-            ->add(ApiErrorHandlerMiddleware::class)
         ;
 
         $this->slim->post('/stopTask/{bot_id}', function (Request $request, Response $response, $args) {
@@ -85,6 +85,9 @@ class App
             $redis->remove(intval($args['bot_id']));
             return $response;
         });
+
+        $this->slim->add(NotFoundMiddleware::class);
+        $this->slim->add(ApiErrorHandlerMiddleware::class);
     }
 
     public function run()
