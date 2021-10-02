@@ -8,16 +8,11 @@ use Exception;
 
 class TelegramApi
 {
-    private string $apiEndpoint;
-
-    public function __construct(?string $apiEndpoint = null)
-    {
-        $this->apiEndpoint = $apiEndpoint ?? 'https://api.telegram.org/bot';
-    }
+    private const API_ENDPOINT = 'https://api.telegram.org/bot';
 
     public function httpApiCall(string $token, string $method, array $params = []): array
     {
-        $ch = curl_init($this->apiEndpoint . $token . '/' . $method);
+        $ch = curl_init(self::API_ENDPOINT . $token . '/' . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         if (!empty($params)) {
@@ -40,7 +35,7 @@ class TelegramApi
         return $json_response;
     }
 
-    public function getMe(string $token)
+    public function getMe(string $token): array
     {
         return $this->httpApiCall($token, 'getMe');
     }

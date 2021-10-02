@@ -23,7 +23,7 @@ use Psr\Http\Message\UriFactoryInterface;
 use Slim\App as SlimApp;
 use Slim\Factory\AppFactory;
 use Slim\Interfaces\RouteCollectorProxyInterface;
-use Valitron\Validator;
+use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 
 class App
@@ -34,29 +34,8 @@ class App
         $container = $this->getContainer();
         AppFactory::setContainer($container);
         AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
-        $this->registerValidatorRules();
         $this->slim = AppFactory::create();
         $this->registerRoutes();
-    }
-
-    private function registerValidatorRules()
-    {
-        Validator::addRule('exclude_if_entities',
-            static function ($field, $value, array $params, array $fields) {
-                return !array_key_exists('entities', $fields);
-            }, 'You must choose either parse_mode or entities. You cannot choose both');
-        Validator::addRule('parse_mode_values',
-            static function ($field, $value, array $params, array $fields) {
-                return in_array(mb_strtolower($value), ['html', 'markdown', 'markdownv2']);
-            }, '{field} can be only one of these values: html, markdown, markdownv2');
-        Validator::addRule('my_array',
-            static function($field, $value, array $params, array $fields) {
-                return is_array($value);
-            }, '{field} must be an array');
-        Validator::addRule('string',
-            static function($field, $value, array $params, array $fields){
-                return is_string($value);
-            }, '{field} must be a string');
     }
 
     private function getContainer() :ContainerInterface
@@ -70,7 +49,7 @@ class App
         ];
         $definitions = [
             ValidatorInterface::class => function() {
-                return new \Yiisoft\Validator\Validator();
+                return new Validator();
             },
             TaskManager::class => function(ContainerInterface $c) {
                 return new TaskManager($c->get('redis_url'));
