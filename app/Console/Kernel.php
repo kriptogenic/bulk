@@ -9,8 +9,8 @@ use App\Async\Memory\RedisConnectionPool;
 use App\Async\Memory\RedisMemory;
 use App\Async\Memory\RedisQueue;
 use App\Async\Sender;
+use Dotenv\Dotenv;
 use Mix\Monolog\Handler\ConsoleHandler;
-use Mix\Monolog\Handler\RotatingFileHandler;
 use Mix\Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -25,7 +25,12 @@ class Kernel
         $this->registerShutdownFunction($killSignal);
 
         $senderChannel = new Channel();
-        $redisPool = new RedisConnectionPool('@172.26.48.1:6379', 11);
+        $dotenv = Dotenv::createImmutable(BASE_DIR);
+        $dotenv->load();
+        $redisPool = new RedisConnectionPool(
+            sprintf("@%s:%s", $_ENV['REDIS_HOST'], $_ENV['REDIS_PORT']),
+            11
+        );
         $queue = new RedisQueue($redisPool->get());
         $this->runReactor($queue, $senderChannel, $killSignal);
 

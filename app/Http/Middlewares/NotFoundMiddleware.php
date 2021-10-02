@@ -11,6 +11,9 @@ use Slim\Exception\HttpNotFoundException;
 
 class NotFoundMiddleware implements MiddlewareInterface
 {
+    /**
+     * @throws ApiException
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
