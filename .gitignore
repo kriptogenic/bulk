@@ -1,7 +1,1 @@
-.idea/
-vendor/
-public/.htaccess
-bin/users.php
-bin/result.json
-test.php
-.env
+/old
