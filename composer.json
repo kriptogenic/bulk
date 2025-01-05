@@ -10,8 +10,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-curl": "*",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "nutgram/nutgram": "^1.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
