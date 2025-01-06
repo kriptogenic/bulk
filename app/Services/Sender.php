@@ -53,12 +53,12 @@ class Sender
             ->mapWithKeys(fn(int $chatId)
                 => [
                 $chatId => new Request(
-                    'POST',
-                    $endpoint,
-                    [
+                    method: 'POST',
+                    uri: $endpoint,
+                    headers: [
                         'Content-Type' => 'application/json',
                     ],
-                    json_encode([
+                    body: json_encode([
                         ...$params,
                         'chat_id' => $chatId,
                     ]),
@@ -79,8 +79,9 @@ class Sender
                     report($reason);
                     return;
                 }
+                $contents = $response->getBody()->getContents();
                 try {
-                    $json = json_decode($response->getBody()->getContents(), flags: JSON_THROW_ON_ERROR);
+                    $json = json_decode($contents, flags: JSON_THROW_ON_ERROR);
                 } catch (Throwable $exception) {
                     $result->put($chatId, MessageStatus::Failed);
                     report($exception);
@@ -117,7 +118,7 @@ class Sender
                 Log::error(
                     'Failed to detect error type',
                     [
-                        'response' => $response->getBody()->getContents(),
+                        'response' => $contents,
                         'decodedJson' => $json,
                     ],
                 );

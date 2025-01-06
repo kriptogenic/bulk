@@ -39,12 +39,14 @@ final class TaskController extends Controller
             $botInfo->username,
             $token,
             $method,
-            [],
-            $request->validated(['chats']),
-            $request->validated(['webhook'])
+            $request->validated('params'),
+            $request->validated('chats'),
+            $request->validated('webhook'),
         );
 
-        return new TaskResource($task);
+        return (new TaskResource($task))->additional([
+            'message' => 'Task queued',
+        ]);
     }
 
     public function show(string $id)
