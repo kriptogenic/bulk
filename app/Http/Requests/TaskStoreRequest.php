@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\SendMethod;
+use App\Rules\ParamsValidateRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,12 +34,16 @@ final class TaskStoreRequest extends FormRequest
                 'integer',
                 'distinct',
             ],
+            'params' => [
+                'required',
+                'array',
+                new ParamsValidateRule(),
+            ],
             'webhook' => [
                 'nullable',
                 'string',
                 'url',
             ],
-            // @todo params
         ];
     }
 

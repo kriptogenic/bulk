@@ -14,6 +14,8 @@ class Task extends Model
 {
     use HasVersion7Uuids;
 
+    protected $with = ['chats'];
+
     protected function casts(): array
     {
         return [

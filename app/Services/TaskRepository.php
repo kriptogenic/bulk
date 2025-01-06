@@ -7,6 +7,10 @@ namespace App\Services;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class TaskRepository
@@ -44,7 +48,7 @@ class TaskRepository
 
     public function getById(string $id): Task
     {
-        return Task::with('chats')->findOrFail($id);
+        return Task::findOrFail($id);
     }
 
     public function hasPendingTaskForBot(int $botId): bool
@@ -52,5 +56,41 @@ class TaskRepository
         return Task::where('bot_id', $botId)
             ->whereIn('status', [TaskStatus::Pending, TaskStatus::InProgress])
             ->exists();
+    }
+
+    public function reserveTask(): ?Task
+    {
+        $lock = Cache::lock('reserved_task', 20);
+
+        try {
+            return $lock->block(15, function (): ?Task {
+                $task = Task::where('status', TaskStatus::Pending)
+                    ->orderBy('created_at')
+                    ->firstOrFail();
+
+                $task->status = TaskStatus::InProgress;
+                $task->started_at = CarbonImmutable::now();
+                $task->save();
+
+                return $task;
+            });
+        } catch (LockTimeoutException|ModelNotFoundException) {
+            return null;
+        }
+    }
+
+    public function finishTask(Task $task, ?TaskStatus $status): void
+    {
+        if ($status !== null) {
+            $task->status = $status;
+        }
+        $task->finished_at = CarbonImmutable::now();
+        $task->save();
+    }
+
+    public function setStatus(Task $task, TaskStatus $status): void
+    {
+        $task->status = $status;
+        $task->save();
     }
 }
