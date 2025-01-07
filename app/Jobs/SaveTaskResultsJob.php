@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use App\Enums\MessageStatus;
 use App\Models\Task;
+use App\Services\TaskJobsWaiter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -41,5 +42,16 @@ class SaveTaskResultsJob implements ShouldQueue
             }
             $this->task->chats()->where('chat_id', $chatId)->update($values);
         });
+    }
+
+    /**
+     * @return non-empty-list<string>
+     */
+    public function tags(): array
+    {
+        return [
+            'save-results',
+            TaskJobsWaiter::getTag($this->task),
+        ];
     }
 }
