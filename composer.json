@@ -12,6 +12,7 @@
         "php": "^8.2",
         "ext-curl": "*",
         "laravel/framework": "^11.31",
+        "laravel/horizon": "^5.30",
         "laravel/tinker": "^2.9",
         "nutgram/nutgram": "^4.31"
     },

@@ -11,8 +11,11 @@ use App\Exceptions\TaskCancelledException;
 use App\Jobs\SaveTaskResultsJob;
 use App\Models\Task;
 use App\Services\Sender;
+use App\Services\TaskJobsWaiter;
 use App\Services\TaskRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
+use Laravel\Horizon\Contracts\TagRepository;
 use Throwable;
 
 class WorkerCommand extends Command
@@ -21,10 +24,16 @@ class WorkerCommand extends Command
 
     protected $description = 'Command description';
     private Sender $sender;
+    private TaskJobsWaiter $taskJobsWaiter;
 
-    public function handle(Sender $sender, TaskRepository $taskRepository): void
+    public function handle(
+        Sender $sender,
+        TaskRepository $taskRepository,
+        TaskJobsWaiter $taskJobsWaiter,
+    ): void
     {
         $this->sender = $sender;
+        $this->taskJobsWaiter = $taskJobsWaiter;
 
         while (true) {
             $task = $taskRepository->reserveTask();
@@ -55,14 +64,17 @@ class WorkerCommand extends Command
         $chats = $task->chats->pluck('chat_id');
 
         if ($task->method !== SendMethod::SendChatAction) {
+            $this->taskJobsWaiter->start($task);
             $results = $this->sender->send($task->token, SendMethod::SendChatAction, $chats, [
                 'action' => $task->method->prefetchAction()->value,
             ]);
             $this->traverseAndSaveResults($results, $task, true);
-            sleep(4);
+            $this->taskJobsWaiter->wait($task);
             $chats = $task->chats()->where('prefetch_status', MessageStatus::Delivered)->pluck('chat_id');
         }
+        dump($chats);
 
+        $this->taskJobsWaiter->start($task);
         $results = $this->sender->send(
             $task->token,
             $task->method,
@@ -70,6 +82,7 @@ class WorkerCommand extends Command
             $task->params,
         );
         $this->traverseAndSaveResults($results, $task, false);
+        $this->taskJobsWaiter->wait($task);
     }
 
     private function traverseAndSaveResults(\Generator $results, Task $task, bool $isPrefetch): void
