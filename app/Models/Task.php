@@ -9,6 +9,7 @@ use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Concerns\HasVersion7Uuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use SergiX44\Nutgram\Telegram\Properties\ChatAction;
 
 class Task extends Model
 {
@@ -20,6 +21,7 @@ class Task extends Model
     {
         return [
             'method' => SendMethod::class,
+            'prefetch_type' => ChatAction::class,
             'params' => 'json',
             'status' => TaskStatus::class,
             'started_at' => 'immutable_datetime',

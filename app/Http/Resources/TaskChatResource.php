@@ -18,8 +18,6 @@ final class TaskChatResource extends JsonResource
         return [
             'chat_id' => $this->resource->chat_id,
             'status' => $this->resource->status,
-
-            'task_id' => $this->resource->task_id,
         ];
     }
 }

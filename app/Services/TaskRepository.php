@@ -12,6 +12,7 @@ use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use SergiX44\Nutgram\Telegram\Properties\ChatAction;
 
 class TaskRepository
 {
@@ -24,6 +25,7 @@ class TaskRepository
         string $username,
         string $token,
         SendMethod $method,
+        ChatAction $prefetchType,
         array $params,
         array $chats,
         ?string $webhook,
@@ -34,6 +36,7 @@ class TaskRepository
         $task->username = $username;
         $task->token = $token;
         $task->method = $method;
+        $task->prefetch_type = $prefetchType;
         $task->params = $params;
         $task->webhook = $webhook;
         $task->status = TaskStatus::Pending;
@@ -84,6 +87,7 @@ class TaskRepository
         if ($status !== null) {
             $task->status = $status;
         }
+        $task->token = null;
         $task->finished_at = CarbonImmutable::now();
         $task->save();
     }

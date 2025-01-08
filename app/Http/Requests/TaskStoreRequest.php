@@ -39,6 +39,10 @@ final class TaskStoreRequest extends FormRequest
                 'array',
                 new ParamsValidateRule(),
             ],
+            'test_chat_id' => [
+                'required',
+                'integer',
+            ],
             'webhook' => [
                 'nullable',
                 'string',

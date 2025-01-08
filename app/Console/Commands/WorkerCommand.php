@@ -63,10 +63,10 @@ class WorkerCommand extends Command
 
         $chats = $task->chats->pluck('chat_id');
 
-        if ($task->method !== SendMethod::SendChatAction) {
+        if ($task->prefetch_type !== null) {
             $this->taskJobsWaiter->start($task);
             $results = $this->sender->send($task->token, SendMethod::SendChatAction, $chats, [
-                'action' => $task->method->prefetchAction()->value,
+                'action' => $task->prefetch_type->value,
             ]);
             $this->traverseAndSaveResults($results, $task, true);
             $this->taskJobsWaiter->wait($task);

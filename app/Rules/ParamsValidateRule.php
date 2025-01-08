@@ -12,7 +12,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use SergiX44\Nutgram\Telegram\Properties\ChatAction;
-use SergiX44\Nutgram\Telegram\Properties\MessageEntityType;
 use SergiX44\Nutgram\Telegram\Properties\ParseMode;
 use SergiX44\Nutgram\Telegram\Types\Message\LinkPreviewOptions;
 
@@ -48,67 +47,41 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
                 ],
             ],
             SendMethod::SendMessage => [
-                'params.text' => [
-                    'required',
-                    'string',
-                    'min:1',
-                    'max:4096',
-                ],
-                'params.parse_mode' => [
-                    'nullable',
-                    'string',
-                    Rule::enum(ParseMode::class),
-                ],
-                'params.entities' => [
-                    'prohibited_if:params.parse_mode',
-                    'array',
-                ],
-                'params.entities.*.type' => [
-                    'required',
-                    'string',
-                    Rule::enum(MessageEntityType::class),
-                ],
-                'params.entities.*.offset' => [
-                    'required',
-                    'integer',
-                ],
-                'params.entities.*.length' => [
-                    'required',
-                    'integer',
-                ],
-                'params.entities.*.url' => [
-                    'required_if:params.entities.*.type,' . MessageEntityType::TEXT_LINK->value,
-                    'prohibited_unless:params.entities.*.type,' . MessageEntityType::TEXT_LINK->value,
-                    'string',
-                    'url',
-                ],
-                'params.entities.*.language' => [
-                    'required_if:params.entities.*.type,' . MessageEntityType::PRE->value,
-                    'prohibited_unless:params.entities.*.type,' . MessageEntityType::PRE->value,
-                    'string',
-                ],
-                'params.entities.*.custom_emoji_id' => [
-                    'required_if:params.entities.*.type,' . MessageEntityType::CUSTOM_EMOJI->value,
-                    'prohibited_unless:params.entities.*.type,' . MessageEntityType::CUSTOM_EMOJI->value,
-                    'string',
-                ],
-                'params.link_preview_options' => [
-                    'nullable',
-                    'string',
-                    Rule::enum(LinkPreviewOptions::class),
-                ],
-                'params.disable_notification' => [
-                    'nullable',
-                    'boolean',
-                ],
-                'params.protect_content' => [
-                    'nullable',
-                    'boolean',
-                ],
-                'params.reply_markup' => [
-                    'nullable',
-                    // @todo rules
-                ],
+                ...$this->text(),
+                ...$this->parseMode(),
+                ...$this->entities(),
+                ...$this->linkPreviewOptions(),
+                ...$this->disableNotification(),
+                ...$this->protectContent(),
+                ...$this->replyMarkup(),
+            ],
+            SendMethod::CopyMessage => [
+                ...$this->fromChatId(),
+                ...$this->messageId(),
+                ...$this->caption(),
+                ...$this->parseMode(),
+                ...$this->captionEntities(),
+                ...$this->showCaptionAboveMedia(),
+                ...$this->disableNotification(),
+                ...$this->protectContent(),
+                ...$this->replyMarkup(),
+            ],
+            SendMethod::ForwardMessage => [
+                ...$this->fromChatId(),
+                ...$this->messageId(),
+                ...$this->disableNotification(),
+                ...$this->protectContent(),
+            ],
+            SendMethod::SendPhoto => [
+                ...$this->photo(),
+                ...$this->caption(),
+                ...$this->parseMode(),
+                ...$this->captionEntities(),
+                ...$this->showCaptionAboveMedia(),
+                ...$this->hasSpoiler(),
+                ...$this->disableNotification(),
+                ...$this->protectContent(),
+                ...$this->replyMarkup(),
             ],
         };
         $validator = Validator::make([
@@ -120,5 +93,149 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
                 $fail($error);
             }
         }
+    }
+
+    private function text(bool $isCaption = false): array
+    {
+        $key = $isCaption ? 'caption' : 'text';
+        $length = $isCaption ? 1024 : 4096;
+        return [
+            'params.' . $key => [
+                'nullable',
+                'string',
+                'min:1',
+                'max:' . $length,
+            ],
+        ];
+    }
+
+    private function caption(): array
+    {
+        return $this->text(true);
+    }
+
+    private function parseMode(): array
+    {
+        return [
+            'params.parse_mode' => [
+                'nullable',
+                'string',
+                Rule::enum(ParseMode::class),
+            ],
+        ];
+    }
+
+    private function entities(bool $isCaption = false): array
+    {
+        $key = $isCaption ? 'caption_entities' : 'entities';
+        return [
+            'params.' . $key => [
+                'nullable',
+                'prohibited_if:params.parse_mode',
+                'array',
+            ],
+        ];
+    }
+
+    private function captionEntities(): array
+    {
+        return $this->entities(true);
+    }
+
+    private function linkPreviewOptions(): array
+    {
+        return [
+            'params.link_preview_options' => [
+                'nullable',
+                'string',
+                Rule::enum(LinkPreviewOptions::class),
+            ],
+        ];
+    }
+
+    private function disableNotification(): array
+    {
+        return [
+            'params.disable_notification' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
+    }
+
+    private function protectContent(): array
+    {
+        return [
+            'params.protect_content' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
+    }
+
+    private function replyMarkup(): array
+    {
+        return [
+            'params.reply_markup' => [
+                'nullable',
+                // @todo rules
+            ],
+        ];
+    }
+
+    private function fromChatId(): array
+    {
+        return [
+            'params.from_chat_id' => [
+                'required',
+                'integer',
+            ],
+        ];
+    }
+
+    private function messageId(): array
+    {
+        return [
+            'params.message_id' => [
+                'required',
+                'integer',
+            ],
+        ];
+    }
+
+    private function showCaptionAboveMedia(): array
+    {
+        return [
+            'params.show_caption_above_media' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
+    }
+
+    private function file(string $field): array
+    {
+        return [
+            'params.' . $field => [
+                'required',
+                'string',
+                'max:100',
+            ],
+        ];
+    }
+
+    private function photo(): array
+    {
+        return $this->file('photo');
+    }
+
+    private function hasSpoiler(): array
+    {
+        return [
+            'params.has_spoiler' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
     }
 }
