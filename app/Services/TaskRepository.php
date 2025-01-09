@@ -40,7 +40,7 @@ class TaskRepository
         $task->token = $token;
         $task->method = $method;
         $task->prefetch_type = $prefetchType;
-        $task->params = $params;
+        $task->params = array_filter($params, static fn(mixed $param): bool => $param !== null);
         $task->webhook = $webhook;
         $task->status = TaskStatus::Pending;
 
