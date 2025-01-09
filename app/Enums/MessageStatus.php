@@ -12,4 +12,5 @@ enum MessageStatus: string
     case Failed = 'failed';
     case TooManyRequests = 'to_many_requests';
     case HaveNoRights = 'have_no_rights';
+    case Pending = 'pending';
 }

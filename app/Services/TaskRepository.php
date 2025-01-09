@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use App\Models\TaskChat;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use SergiX44\Nutgram\Telegram\Properties\ChatAction;
@@ -96,5 +99,21 @@ class TaskRepository
     {
         $task->status = $status;
         $task->save();
+    }
+
+    /**
+     * @return Collection<value-of<MessageStatus>, int>
+     */
+    public function getStats(string $taskId): Collection
+    {
+        $data = DB::table(TaskChat::make()->getTable())
+            ->select(DB::raw('count(*) as count, status'))
+            ->where('task_id', $taskId)
+            ->groupBy('status')
+            ->get();
+
+        return $data
+            ->mapWithKeys(fn(\stdClass $item) => [$item->status ?? MessageStatus::Pending->value => $item->count])
+            ->sortKeys();
     }
 }

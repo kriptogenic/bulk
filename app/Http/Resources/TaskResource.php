@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use App\Models\Task;
+use App\Services\TaskRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -23,6 +24,7 @@ final class TaskResource extends JsonResource
             'webhook' => $this->resource->webhook,
             'started_at' => $this->resource->started_at,
             'finished_at' => $this->resource->finished_at,
+            'stats' => app(TaskRepository::class)->getStats($this->resource->id),
             'chats' => TaskChatResource::collection($this->whenLoaded('chats')),
         ];
     }
