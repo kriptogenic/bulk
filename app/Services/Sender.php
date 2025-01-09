@@ -127,7 +127,7 @@ class Sender
         $pool->promise()->wait();
 
         if ($retryAfter > 0) {
-            usleep($retryAfter);
+            sleep($retryAfter);
         }
 
         $delta = microtime(true) - $start;
