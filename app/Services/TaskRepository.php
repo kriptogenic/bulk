@@ -28,7 +28,7 @@ class TaskRepository
         string $username,
         string $token,
         SendMethod $method,
-        ChatAction $prefetchType,
+        ?ChatAction $prefetchType,
         array $params,
         array $chats,
         ?string $webhook,
