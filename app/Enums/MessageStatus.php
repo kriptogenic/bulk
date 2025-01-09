@@ -7,7 +7,7 @@ namespace App\Enums;
 enum MessageStatus: string
 {
     case Delivered = 'delivered';
-    case NotDelivered = 'not_delivered';
+    case Forbidden = 'forbidden';
     case ChatNotFound = 'chat_not_found';
     case Failed = 'failed';
     case TooManyRequests = 'to_many_requests';

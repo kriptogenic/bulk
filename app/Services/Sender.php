@@ -89,7 +89,7 @@ class Sender
                 }
 
                 if ($json->error_code === 403) {
-                    $result->put($chatId, MessageStatus::NotDelivered);
+                    $result->put($chatId, MessageStatus::Forbidden);
                     return;
                 }
 
