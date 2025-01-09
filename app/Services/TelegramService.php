@@ -42,19 +42,23 @@ class TelegramService
     public function testMethodAndReturnPrefetchType(SendMethod $method, int $chatId, array $params): ?ChatAction
     {
         $message = $this->testMessage($method, $params, $chatId);
-        if ($method === SendMethod::SendChatAction) {
+        if ($message === null) {
             return null;
         }
         return $method->prefetchAction() ?? $this->prefetchByMessage($message->getType());
     }
 
-    private function testMessage(SendMethod $method, array $params, int $chatId): Message
+    private function testMessage(SendMethod $method, array $params, int $chatId): ?Message
     {
         try {
             $unknownType = $this->bot->sendRequest($method->value, [
                 ...$params,
                 'chat_id' => $chatId,
             ]);
+
+            if ($method === SendMethod::SendChatAction) {
+                return null;
+            }
 
             if ($method === SendMethod::CopyMessage) {
                 return $this->bot->forwardMessage($chatId, $params['from_chat_id'], $params['message_id']);
