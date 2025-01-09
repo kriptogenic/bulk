@@ -54,7 +54,7 @@ class TaskRepository
 
     public function getById(string $id): Task
     {
-        return Task::findOrFail($id);
+        return Task::with('chats')->findOrFail($id);
     }
 
     public function hasPendingTaskForBot(int $botId): bool
@@ -70,7 +70,8 @@ class TaskRepository
 
         try {
             return $lock->block(15, function (): ?Task {
-                $task = Task::where('status', TaskStatus::Pending)
+                $task = Task::with('chats')
+                    ->where('status', TaskStatus::Pending)
                     ->orderBy('created_at')
                     ->firstOrFail();
 
