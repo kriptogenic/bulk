@@ -9,10 +9,11 @@ use MoonShine\Contracts\Core\DependencyInjection\ConfiguratorContract;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
 use MoonShine\Laravel\DependencyInjection\MoonShine;
 use MoonShine\Laravel\DependencyInjection\MoonShineConfigurator;
-use App\MoonShine\Resources\MoonShineUserResource;
-use App\MoonShine\Resources\MoonShineUserRoleResource;
+use App\MoonShine\Resources\UserResource;
+use App\MoonShine\Resources\RoleResource;
 use App\MoonShine\Resources\TaskResource;
 use App\MoonShine\Resources\TaskChatResource;
+use Sweet1s\MoonshineRBAC\Resource\PermissionResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -27,8 +28,9 @@ class MoonShineServiceProvider extends ServiceProvider
 
         $core
             ->resources([
-                MoonShineUserResource::class,
-                MoonShineUserRoleResource::class,
+                UserResource::class,
+                RoleResource::class,
+                PermissionResource::class,
                 TaskResource::class,
                 TaskChatResource::class,
             ])

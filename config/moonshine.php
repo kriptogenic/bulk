@@ -26,7 +26,7 @@ return [
 
 
     // Default flags
-    'use_migrations' => true,
+    'use_migrations' => false,
     'use_notifications' => true,
     'use_database_notifications' => true,
 
@@ -61,7 +61,7 @@ return [
     'auth' => [
         'enabled' => true,
         'guard' => 'moonshine',
-        'model' => MoonshineUser::class,
+        'model' => \App\Models\User::class,
         'middleware' => Authenticate::class,
         'pipelines' => [],
     ],

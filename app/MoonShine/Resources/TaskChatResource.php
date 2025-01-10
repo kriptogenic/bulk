@@ -15,12 +15,15 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Fields\Number;
+use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 
 /**
  * @extends ModelResource<TaskChat>
  */
 class TaskChatResource extends ModelResource
 {
+    use WithRolePermissions;
+
     protected string $model = TaskChat::class;
 
     protected string $title = 'TaskChats';

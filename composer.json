@@ -15,7 +15,8 @@
         "laravel/horizon": "^5.30",
         "laravel/tinker": "^2.9",
         "moonshine/moonshine": "^3.0",
-        "nutgram/nutgram": "^4.31"
+        "nutgram/nutgram": "^4.31",
+        "sweet1s/moonshine-roles-permissions": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

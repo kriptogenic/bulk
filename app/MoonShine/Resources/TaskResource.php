@@ -7,8 +7,10 @@ namespace App\MoonShine\Resources;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Models\Task;
-use MoonShine\Laravel\Enums\Ability;
+use App\Models\User;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
+use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Link;
@@ -21,16 +23,34 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Url;
+use RuntimeException;
 use SergiX44\Nutgram\Telegram\Properties\ChatAction;
+use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 
 /**
  * @extends ModelResource<Task>
  */
 class TaskResource extends ModelResource
 {
+    use WithRolePermissions;
+
     protected string $model = Task::class;
 
     protected string $title = 'Tasks';
+
+    protected function modifyQueryBuilder(Builder $builder): Builder
+    {
+        $user = MoonShineAuth::getGuard()->user();
+        if (!$user instanceof User) {
+            throw new RuntimeException('User not authenticated');
+        }
+
+        if ($user->roles->pluck('id')->containsStrict(User::SUPER_ADMIN_ROLE_ID)) {
+            return $builder;
+        }
+
+        return $builder;
+    }
 
     /**
      * @return list<FieldContract>
@@ -105,20 +125,13 @@ class TaskResource extends ModelResource
         return ['id', 'username'];
     }
 
-    protected function filters(): iterable {
+    protected function filters(): iterable
+    {
         return [
             DateRange::make('Created At'),
             Enum::make('Method')->attach(SendMethod::class)->nullable(),
             Enum::make('Prefetch type')->attach(ChatAction::class)->nullable(),
             Enum::make('Status')->attach(TaskStatus::class)->nullable(),
         ];
-    }
-
-    protected function isCan(Ability $ability): bool
-    {
-        return match ($ability) {
-            Ability::CREATE => false,
-            default => true,
-        };
     }
 }

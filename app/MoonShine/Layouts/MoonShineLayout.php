@@ -4,35 +4,13 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Layouts;
 
+use App\MoonShine\Resources\RoleResource;
+use App\MoonShine\Resources\UserResource;
 use MoonShine\Laravel\Layouts\AppLayout;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
-use MoonShine\Laravel\Components\Layout\Locales;
-use MoonShine\Laravel\Components\Layout\Notifications;
-use MoonShine\Laravel\Components\Layout\Profile;
-use MoonShine\Laravel\Components\Layout\Search;
-use MoonShine\UI\Components\Breadcrumbs;
-use MoonShine\UI\Components\Components;
-use MoonShine\UI\Components\Layout\Assets;
-use MoonShine\UI\Components\Layout\Body;
-use MoonShine\UI\Components\Layout\Burger;
-use MoonShine\UI\Components\Layout\Content;
-use MoonShine\UI\Components\Layout\Div;
-use MoonShine\UI\Components\Layout\Favicon;
-use MoonShine\UI\Components\Layout\Flash;
-use MoonShine\UI\Components\Layout\Footer;
-use MoonShine\UI\Components\Layout\Head;
-use MoonShine\UI\Components\Layout\Header;
-use MoonShine\UI\Components\Layout\Html;
+use MoonShine\MenuManager\MenuGroup;
 use MoonShine\UI\Components\Layout\Layout;
-use MoonShine\UI\Components\Layout\Logo;
-use MoonShine\UI\Components\Layout\Menu;
-use MoonShine\UI\Components\Layout\Meta;
-use MoonShine\UI\Components\Layout\Sidebar;
-use MoonShine\UI\Components\Layout\ThemeSwitcher;
-use MoonShine\UI\Components\Layout\TopBar;
-use MoonShine\UI\Components\Layout\Wrapper;
-use MoonShine\UI\Components\When;
 use App\MoonShine\Resources\TaskResource;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Resources\TaskChatResource;
@@ -49,7 +27,23 @@ final class MoonShineLayout extends AppLayout
     protected function menu(): array
     {
         return [
-            ...parent::menu(),
+            MenuGroup::make(static fn () => __('moonshine::ui.resource.system'), [
+                MenuItem::make(
+                    static fn () => __('moonshine::ui.resource.admins_title'),
+                    UserResource::class
+                ),
+                MenuItem::make(
+                    static fn () => __('moonshine::ui.resource.role_title'),
+                    RoleResource::class
+                ),
+            ]),
+
+//            MenuGroup::make('System2', [
+//                MenuItem::make('Admins', \Sweet1s\MoonshineRBAC\Resource\UserResource::class, 'users'),
+//                MenuItem::make('Roles', \Sweet1s\MoonshineRBAC\Resource\RoleResource::class, 'shield-exclamation'),
+//                MenuItem::make('Permissions', \Sweet1s\MoonshineRBAC\Resource\PermissionResource::class, 'shield-exclamation'),
+//            ], 'user-group'),
+//            ...parent::menu(),
             MenuItem::make('Tasks', TaskResource::class),
             MenuItem::make('TaskChats', TaskChatResource::class),
         ];

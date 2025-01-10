@@ -4,30 +4,33 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\Models\Role;
+use App\Models\User;
 use MoonShine\Laravel\Enums\Action;
-use MoonShine\Laravel\Models\MoonshineUserRole;
+use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use Sweet1s\MoonshineRBAC\Resource\PermissionResource;
+use Sweet1s\MoonshineRBAC\Traits\WithPermissionsFormComponent;
+use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 
 #[Icon('bookmark')]
 /**
- * @extends ModelResource<MoonshineUserRole>
+ * @extends ModelResource<User>
  */
-class MoonShineUserRoleResource extends ModelResource
+class RoleResource extends ModelResource
 {
-    protected string $model = MoonshineUserRole::class;
+    use WithRolePermissions;
+    use WithPermissionsFormComponent;
+    protected string $model = Role::class;
 
     protected string $column = 'name';
 
     protected bool $createInModal = true;
-
-    protected bool $detailInModal = true;
-
-    protected bool $editInModal = true;
 
     protected bool $cursorPaginate = true;
 
@@ -36,10 +39,10 @@ class MoonShineUserRoleResource extends ModelResource
         return __('moonshine::ui.resource.role');
     }
 
-    protected function activeActions(): ListOf
-    {
-        return parent::activeActions()->except(Action::VIEW);
-    }
+//    protected function activeActions(): ListOf
+//    {
+//        return parent::activeActions()->except(Action::VIEW);
+//    }
 
     protected function indexFields(): iterable
     {
@@ -51,7 +54,10 @@ class MoonShineUserRoleResource extends ModelResource
 
     protected function detailFields(): iterable
     {
-        return $this->indexFields();
+        return [
+            ...$this->indexFields(),
+            HasMany::make('Permissions', 'permissions', PermissionResource::class),
+            ];
     }
 
     protected function formFields(): iterable
@@ -71,7 +77,7 @@ class MoonShineUserRoleResource extends ModelResource
     protected function rules($item): array
     {
         return [
-            'name' => ['required', 'min:5'],
+            'name' => ['required', 'min:3'],
         ];
     }
 

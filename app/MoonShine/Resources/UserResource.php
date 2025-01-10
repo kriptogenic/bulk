@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\Models\User;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Models\MoonshineUserRole;
@@ -26,18 +28,23 @@ use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Password;
 use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
+use Sweet1s\MoonshineRBAC\Traits\WithPermissionsFormComponent;
+use Sweet1s\MoonshineRBAC\Traits\WithRoleFormComponent;
+use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 
 #[Icon('users')]
 /**
  * @extends ModelResource<MoonshineUser>
  */
-class MoonShineUserResource extends ModelResource
+class UserResource extends ModelResource
 {
-    protected string $model = MoonshineUser::class;
+    use WithRolePermissions;
+    use WithRoleFormComponent;
+    protected string $model = User::class;
 
     protected string $column = 'name';
 
-    protected array $with = ['moonshineUserRole'];
+    protected array $with = ['roles'];
 
     protected bool $simplePaginate = true;
 
@@ -48,22 +55,22 @@ class MoonShineUserResource extends ModelResource
         return __('moonshine::ui.resource.admins_title');
     }
 
-    protected function activeActions(): ListOf
-    {
-        return parent::activeActions()->except(Action::VIEW);
-    }
+//    protected function activeActions(): ListOf
+//    {
+//        return parent::activeActions()->except(Action::VIEW);
+//    }
 
     protected function indexFields(): iterable
     {
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make(
-                __('moonshine::ui.resource.role'),
-                'moonshineUserRole',
-                formatted: static fn (MoonshineUserRole $model) => $model->name,
-                resource: MoonShineUserRoleResource::class,
-            )->badge(Color::PURPLE),
+//            BelongsTo::make(
+//                __('moonshine::ui.resource.role'),
+//                'moonshineUserRole',
+//                formatted: static fn (MoonshineUserRole $model) => $model->name,
+//                resource: RoleResource::class,
+//            )->badge(Color::PURPLE),
 
             Text::make(__('moonshine::ui.resource.name'), 'name'),
 
@@ -74,6 +81,10 @@ class MoonShineUserResource extends ModelResource
             Date::make(__('moonshine::ui.resource.created_at'), 'created_at')
                 ->format("d.m.Y")
                 ->sortable(),
+
+            HasMany::make('Roles', 'roles', RoleResource::class)->fields([
+                Text::make('', 'name')
+            ]),
 
             Email::make(__('moonshine::ui.resource.email'), 'email')
                 ->sortable(),
@@ -93,15 +104,15 @@ class MoonShineUserResource extends ModelResource
                     Tab::make(__('moonshine::ui.resource.main_information'), [
                         ID::make()->sortable(),
 
-                        BelongsTo::make(
-                            __('moonshine::ui.resource.role'),
-                            'moonshineUserRole',
-                            formatted: static fn (MoonshineUserRole $model) => $model->name,
-                            resource: MoonShineUserRoleResource::class,
-                        )
-                            ->reactive()
-                            ->creatable()
-                            ->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
+//                        BelongsTo::make(
+//                            __('moonshine::ui.resource.role'),
+//                            'moonshineUserRole',
+//                            formatted: static fn (MoonshineUserRole $model) => $model->name,
+//                            resource: RoleResource::class,
+//                        )
+//                            ->reactive()
+//                            ->creatable()
+//                            ->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
 
                         Flex::make([
                             Text::make(__('moonshine::ui.resource.name'), 'name')
@@ -143,14 +154,13 @@ class MoonShineUserResource extends ModelResource
     protected function rules($item): array
     {
         return [
-            'name' => 'required',
-            'moonshine_user_role_id' => 'required',
+            'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'sometimes',
                 'bail',
                 'required',
                 'email',
-                Rule::unique('moonshine_users')->ignoreModel($item),
+                Rule::unique(User::class)->ignoreModel($item),
             ],
             'password' => $item->exists
                 ? 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat'
@@ -169,12 +179,12 @@ class MoonShineUserResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-            BelongsTo::make(
-                __('moonshine::ui.resource.role'),
-                'moonshineUserRole',
-                formatted: static fn (MoonshineUserRole $model) => $model->name,
-                resource: MoonShineUserRoleResource::class,
-            )->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
+//            BelongsTo::make(
+//                __('moonshine::ui.resource.role'),
+//                'moonshineUserRole',
+//                formatted: static fn (MoonshineUserRole $model) => $model->name,
+//                resource: RoleResource::class,
+//            )->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
 
             Email::make('E-mail', 'email'),
         ];
