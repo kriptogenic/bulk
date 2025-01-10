@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(ForceJsonMiddleware::class);
         //
     })
+    ->withEvents(false)
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

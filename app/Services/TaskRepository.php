@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
+use App\Events\TaskFinishedEvent;
 use App\Models\Task;
 use App\Models\TaskChat;
 use Carbon\CarbonImmutable;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use SergiX44\Nutgram\Telegram\Properties\ChatAction;
 
 class TaskRepository
@@ -94,6 +96,8 @@ class TaskRepository
         $task->token = null;
         $task->finished_at = CarbonImmutable::now();
         $task->save();
+        Log::info('Task finished', ['task' => $task->id]);
+        TaskFinishedEvent::dispatch($task);
     }
 
     public function setStatus(Task $task, TaskStatus $status): void
