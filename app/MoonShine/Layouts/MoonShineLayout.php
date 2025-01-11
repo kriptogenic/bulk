@@ -7,10 +7,7 @@ namespace App\MoonShine\Layouts;
 use App\MoonShine\Resources\RoleResource;
 use App\MoonShine\Resources\UserResource;
 use MoonShine\Laravel\Layouts\AppLayout;
-use MoonShine\ColorManager\ColorManager;
-use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\MenuManager\MenuGroup;
-use MoonShine\UI\Components\Layout\Layout;
 use App\MoonShine\Resources\TaskResource;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Resources\TaskChatResource;
@@ -38,29 +35,18 @@ final class MoonShineLayout extends AppLayout
                 ),
             ]),
 
-//            MenuGroup::make('System2', [
-//                MenuItem::make('Admins', \Sweet1s\MoonshineRBAC\Resource\UserResource::class, 'users'),
-//                MenuItem::make('Roles', \Sweet1s\MoonshineRBAC\Resource\RoleResource::class, 'shield-exclamation'),
-//                MenuItem::make('Permissions', \Sweet1s\MoonshineRBAC\Resource\PermissionResource::class, 'shield-exclamation'),
-//            ], 'user-group'),
-//            ...parent::menu(),
             MenuItem::make('Tasks', TaskResource::class),
             MenuItem::make('TaskChats', TaskChatResource::class),
         ];
     }
 
-    /**
-     * @param ColorManager $colorManager
-     */
-    protected function colors(ColorManagerContract $colorManager): void
+    protected function getFooterCopyright(): string
     {
-        parent::colors($colorManager);
-
-        // $colorManager->primary('#00000');
+        return '';
     }
 
-    public function build(): Layout
+    protected function getFooterMenu(): array
     {
-        return parent::build();
+        return ['https://github.com/kriptogenic/zaraz' => 'Github'];
     }
 }
