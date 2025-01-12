@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use App\Models\User;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
-use MoonShine\Laravel\Enums\Action;
-use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\Resources\ModelResource;
-use MoonShine\Laravel\Models\MoonshineUserRole;
 use MoonShine\Support\Attributes\Icon;
-use MoonShine\Support\Enums\Color;
-use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Collapse;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Layout\Flex;
@@ -28,7 +22,6 @@ use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Password;
 use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
-use Sweet1s\MoonshineRBAC\Traits\WithPermissionsFormComponent;
 use Sweet1s\MoonshineRBAC\Traits\WithRoleFormComponent;
 use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 
@@ -179,13 +172,6 @@ class UserResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-//            BelongsTo::make(
-//                __('moonshine::ui.resource.role'),
-//                'moonshineUserRole',
-//                formatted: static fn (MoonshineUserRole $model) => $model->name,
-//                resource: RoleResource::class,
-//            )->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
-
             Email::make('E-mail', 'email'),
         ];
     }

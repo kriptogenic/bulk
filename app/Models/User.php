@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Sweet1s\MoonshineRBAC\Traits\MoonshineRBACHasRoles;
@@ -51,5 +52,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function bots(): BelongsToMany
+    {
+        return $this->belongsToMany(Bot::class, relatedKey: 'bot_id');
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(self::SUPER_ADMIN_ROLE_ID);
     }
 }
