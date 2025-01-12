@@ -12,6 +12,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Attributes\Icon;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Link;
 use MoonShine\UI\Fields\Date;
@@ -30,6 +31,7 @@ use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 /**
  * @extends ModelResource<Task>
  */
+#[Icon('rectangle-stack')]
 class TaskResource extends ModelResource
 {
     use WithRolePermissions;
@@ -38,6 +40,8 @@ class TaskResource extends ModelResource
 
     protected string $title = 'Tasks';
 
+    protected bool $withPolicy = true;
+
     protected function modifyQueryBuilder(Builder $builder): Builder
     {
         $user = MoonShineAuth::getGuard()->user();
@@ -45,11 +49,18 @@ class TaskResource extends ModelResource
             throw new RuntimeException('User not authenticated');
         }
 
-        if ($user->roles->pluck('id')->containsStrict(User::SUPER_ADMIN_ROLE_ID)) {
+        if ($user->isSuperAdmin()) {
             return $builder;
         }
 
-        return $builder;
+        return $builder->whereHas(
+            'bot',
+            fn(Builder $query)
+                => $query->whereHas(
+                'users',
+                fn(Builder $query) => $query->where('id', $user->id),
+            ),
+        );
     }
 
     /**
@@ -60,7 +71,7 @@ class TaskResource extends ModelResource
         return [
             Date::make('Created At'),
             ID::make()->sortable(),
-            Text::make('Username')
+            Text::make('Username', 'bot.username')
                 ->changePreview(fn(string $value) => Link::make('https://t.me/' . $value, '@' . $value)),
             Enum::make('Method')->attach(SendMethod::class),
             Enum::make('Prefetch type')->attach(ChatAction::class),

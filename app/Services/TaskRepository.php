@@ -21,6 +21,8 @@ use SergiX44\Nutgram\Telegram\Properties\ChatAction;
 
 class TaskRepository
 {
+    public function __construct(private BotRepository $botRepository) {}
+
     /**
      * @param array<string, mixed> $params
      * @param non-empty-list<int|string> $chats
@@ -35,10 +37,11 @@ class TaskRepository
         array $chats,
         ?string $webhook,
     ): Task {
+        $bot = $this->botRepository->findOrCreate($botId, $username);
         $task = new Task();
 
-        $task->bot_id = $botId;
-        $task->username = $username;
+        $task->bot()->associate($bot);
+        $task->username = $username; // @todo remove in the future
         $task->token = $token;
         $task->method = $method;
         $task->prefetch_type = $prefetchType;

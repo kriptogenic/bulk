@@ -13,7 +13,7 @@ use App\MoonShine\Resources\UserResource;
 use App\MoonShine\Resources\RoleResource;
 use App\MoonShine\Resources\TaskResource;
 use App\MoonShine\Resources\TaskChatResource;
-use Sweet1s\MoonshineRBAC\Resource\PermissionResource;
+use App\MoonShine\Resources\BotResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -30,9 +30,9 @@ class MoonShineServiceProvider extends ServiceProvider
             ->resources([
                 UserResource::class,
                 RoleResource::class,
-                PermissionResource::class,
                 TaskResource::class,
                 TaskChatResource::class,
+                BotResource::class,
             ])
             ->pages([
                 ...$config->getPages(),

@@ -7,8 +7,8 @@ namespace App\MoonShine\Resources;
 use App\Enums\MessageStatus;
 use App\Models\TaskChat;
 
-use MoonShine\Laravel\Enums\Ability;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Attributes\Icon;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\ID;
@@ -20,6 +20,7 @@ use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;
 /**
  * @extends ModelResource<TaskChat>
  */
+#[Icon('chat-bubble-oval-left-ellipsis')]
 class TaskChatResource extends ModelResource
 {
     use WithRolePermissions;
@@ -71,13 +72,5 @@ class TaskChatResource extends ModelResource
     protected function rules(mixed $item): array
     {
         return [];
-    }
-
-    protected function isCan(Ability $ability): bool
-    {
-        return match ($ability) {
-            Ability::CREATE => false,
-            default => true,
-        };
     }
 }
