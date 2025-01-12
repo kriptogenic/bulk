@@ -6,4 +6,5 @@ return [
     App\Providers\HorizonServiceProvider::class,
     App\Providers\MoonShineServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
+    SocialiteProviders\Manager\ServiceProvider::class,
 ];
