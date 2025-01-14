@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\SendMethod;
+use App\Rules\FastArrayIntegerDistinctRule;
 use App\Rules\ParamsValidateRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,11 +29,7 @@ final class TaskStoreRequest extends FormRequest
                 'required',
                 'array',
                 'min:1',
-            ],
-            'chats.*' => [
-                'required',
-                'integer',
-                'distinct',
+                new FastArrayIntegerDistinctRule(),
             ],
             'params' => [
                 'required',
