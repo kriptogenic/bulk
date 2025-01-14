@@ -8,6 +8,7 @@ use MoonShine\Support\Enums\Color;
 
 enum TaskStatus: string
 {
+    case Creating = 'creating';
     case Pending = 'pending';
     case InProgress = 'in_progress';
     case Completed = 'completed';

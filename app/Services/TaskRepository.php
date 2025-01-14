@@ -8,6 +8,7 @@ use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Events\TaskFinishedEvent;
+use App\Jobs\SaveChatsBackgroundJob;
 use App\Models\Task;
 use App\Models\TaskChat;
 use Carbon\CarbonImmutable;
@@ -47,14 +48,24 @@ class TaskRepository
         $task->prefetch_type = $prefetchType;
         $task->params = array_filter($params, static fn(mixed $param): bool => $param !== null);
         $task->webhook = $webhook;
-        $task->status = TaskStatus::Pending;
+        $task->status = count($chats) > 15_000 ? TaskStatus::Creating : TaskStatus::Pending;
 
-        $chats = collect($chats)->map(fn(int|string $chat) => ['chat_id' => (int)$chat]);
+
         DB::beginTransaction();
         $task->save();
-        $task->chats()->createMany($chats);
+        $this->createChats($task, $chats);
         DB::commit();
         return $task;
+    }
+
+    private function createChats(Task $task, array $chats): void
+    {
+        if ($task->status === TaskStatus::Creating) {
+            SaveChatsBackgroundJob::dispatch($task, $chats);
+            return;
+        }
+        $chats = collect($chats)->map(fn(int|string $chat) => ['chat_id' => (int)$chat]);
+        $task->chats()->createMany($chats);
     }
 
     public function getById(string $id): Task
