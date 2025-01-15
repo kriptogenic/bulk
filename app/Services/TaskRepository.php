@@ -146,7 +146,7 @@ class TaskRepository
     public function getPrefetchStats(string $taskId): Collection
     {
         $data = DB::table(TaskChat::make()->getTable())
-            ->select(DB::raw('count(*) as count, status'))
+            ->select(DB::raw('count(*) as count, prefetch_status'))
             ->where('task_id', $taskId)
             ->groupBy('prefetch_status')
             ->get();
