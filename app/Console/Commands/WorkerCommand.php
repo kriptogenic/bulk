@@ -59,7 +59,7 @@ class WorkerCommand extends Command
     {
         $this->info('Processing task ' . $task->id);
 
-        $chats = $task->chats->pluck('chat_id');
+        $chats = $task->chats()->pluck('chat_id');
 
         if ($task->prefetch_type !== null) {
             $this->taskProcessor->process($task, $chats, true);

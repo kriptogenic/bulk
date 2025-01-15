@@ -34,7 +34,7 @@ class TaskProcessor
             $params,
         );
         $this->traverseAndSaveResults($results, $task, $isPrefetch);
-        $this->taskJobsWaiter->wait($task);
+        $this->taskJobsWaiter->wait($task, max(60, intval(count($chats) / 1000)));
     }
 
     /**

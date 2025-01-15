@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Pages;
 
+use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\MoonShine\Resources\TaskChatResource;
@@ -77,16 +78,30 @@ class TaskDetailPage extends DetailPage
                 ),
                 Column::make(
                     [
-                        DonutChartMetric::make('Send stats')
-                            ->values($repository->getStats($this->resource->getItem()->id)->toArray()),
-                        DonutChartMetric::make('Prefetch stats')
-                            ->values($repository->getPrefetchStats($this->resource->getItem()->id)->toArray()),
+                        $this->getStatsChart(true),
+                        $this->getStatsChart(false),
                     ],
                     colSpan: 6,
                 ),
             ]),
-
         ];
+    }
+
+    private function getStatsChart(bool $isMain): DonutChartMetric
+    {
+        $repository = app(TaskRepository::class);
+
+        $stats = $isMain
+            ? $repository->getStats($this->resource->getItem()->id)->sortKeys()
+            : $repository->getPrefetchStats($this->resource->getItem()->id)->sortKeys();
+
+        $label = $isMain ? 'Send stats' : 'Prefetch stats';
+        $colors = $stats->keys()
+            ->map(fn(string $key) => MessageStatus::from($key)->getHexColor())
+        ->toArray();
+        return DonutChartMetric::make($label)
+            ->values($stats->toArray())
+            ->colors($colors);
     }
 
     /**

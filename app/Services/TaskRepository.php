@@ -80,7 +80,7 @@ class TaskRepository
     public function hasPendingTaskForBot(int $botId): bool
     {
         return Task::where('bot_id', $botId)
-            ->whereIn('status', [TaskStatus::Pending, TaskStatus::InProgress])
+            ->whereIn('status', [TaskStatus::Creating, TaskStatus::Pending, TaskStatus::InProgress])
             ->exists();
     }
 
@@ -90,7 +90,7 @@ class TaskRepository
 
         try {
             return $lock->block(15, function (): ?Task {
-                $task = Task::with('chats')
+                $task = Task::withCount('chats')
                     ->where('status', TaskStatus::Pending)
                     ->orderBy('created_at')
                     ->firstOrFail();

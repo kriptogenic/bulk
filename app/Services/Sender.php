@@ -22,6 +22,7 @@ class Sender
     const HTTPS_API_TELEGRAM_ORG = 'https://api.telegram.org/';
     const ONE_SECOND = 1;
     const SECONDS_TO_MICROSECONDS = 1_000_000;
+    private const ADDITIONAL_SLEEP_TIME = 10;
 
     public function __construct(private Client $client) {}
 
@@ -98,6 +99,10 @@ class Sender
                         $result->put($chatId, MessageStatus::ChatNotFound);
                         return;
                     }
+                    if (str_contains($json->description, 'PEER_ID_INVALID')) {
+                        $result->put($chatId, MessageStatus::PeerIdInvalid);
+                        return;
+                    }
                     if (str_contains($json->description, 'have no rights')) {
                         $result->put($chatId, MessageStatus::HaveNoRights);
                         return;
@@ -127,7 +132,7 @@ class Sender
         $pool->promise()->wait();
 
         if ($retryAfter > 0) {
-            sleep($retryAfter);
+            sleep($retryAfter + self::ADDITIONAL_SLEEP_TIME);
         }
 
         $delta = microtime(true) - $start;
