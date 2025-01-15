@@ -48,7 +48,7 @@ class TaskRepository
         $task->prefetch_type = $prefetchType;
         $task->params = array_filter($params, static fn(mixed $param): bool => $param !== null);
         $task->webhook = $webhook;
-        $task->status = count($chats) > 15_000 ? TaskStatus::Creating : TaskStatus::Pending;
+        $task->status = count($chats) > TaskChat::BIG_BOTS_LIMIT ? TaskStatus::Creating : TaskStatus::Pending;
 
 
         DB::beginTransaction();
@@ -70,7 +70,11 @@ class TaskRepository
 
     public function getById(string $id): Task
     {
-        return Task::with('chats')->findOrFail($id);
+        $task = Task::withCount('chats')->findOrFail($id);
+        if($task->chats_count <= TaskChat::BIG_BOTS_LIMIT) {
+            $task->load('chats');
+        }
+        return $task;
     }
 
     public function hasPendingTaskForBot(int $botId): bool

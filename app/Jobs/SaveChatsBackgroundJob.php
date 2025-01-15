@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use App\Models\TaskChat;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -24,7 +25,7 @@ class SaveChatsBackgroundJob implements ShouldQueue
     public function handle(): void
     {
         collect($this->chats)
-            ->chunk(15_000)
+            ->chunk(TaskChat::BIG_BOTS_LIMIT)
             ->each(function (Collection $chats) {
                 $chats = $chats->map(fn(int|string $chat) => ['chat_id' => (int)$chat]);
                 $this->task->chats()->createMany($chats);

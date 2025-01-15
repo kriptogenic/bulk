@@ -13,6 +13,8 @@ class TaskChat extends Model
 {
     use HasVersion7Uuids;
 
+    public const BIG_BOTS_LIMIT = 15_000;
+
     protected $fillable = [
         'chat_id',
     ];
