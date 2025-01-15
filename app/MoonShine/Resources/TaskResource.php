@@ -8,9 +8,11 @@ use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use App\Models\User;
+use App\MoonShine\Pages\TaskDetailPage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\MoonShineAuth;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\UI\Components\Layout\Box;
@@ -21,7 +23,6 @@ use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
-use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Url;
 use RuntimeException;
@@ -63,6 +64,15 @@ class TaskResource extends ModelResource
         );
     }
 
+    protected function pages(): array
+    {
+        return [
+            IndexPage::class,
+            FormPage::class,
+            TaskDetailPage::class,
+        ];
+    }
+
     /**
      * @return list<FieldContract>
      */
@@ -96,29 +106,6 @@ class TaskResource extends ModelResource
         ];
     }
 
-    /**
-     * @return list<FieldContract>
-     */
-    protected function detailFields(): iterable
-    {
-        return [
-            Date::make('Created At'),
-            ID::make()->sortable(),
-            Number::make('Bot ID'),
-            Text::make('Token'),
-            Text::make('Username')
-                ->changePreview(fn(string $value) => Link::make('https://t.me/' . $value, '@' . $value)),
-            Enum::make('Method')->attach(SendMethod::class),
-            Enum::make('Prefetch type')->attach(ChatAction::class),
-            Url::make('Webhook'),
-            Enum::make('Status')->attach(TaskStatus::class),
-
-            Date::make('Started At'),
-            Date::make('Finished At'),
-
-            HasMany::make('Chats', resource: TaskChatResource::class),
-        ];
-    }
 
     /**
      * @param Task $item

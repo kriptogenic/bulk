@@ -14,6 +14,7 @@ use App\MoonShine\Resources\RoleResource;
 use App\MoonShine\Resources\TaskResource;
 use App\MoonShine\Resources\TaskChatResource;
 use App\MoonShine\Resources\BotResource;
+use App\MoonShine\Pages\TaskDetailPage;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,7 @@ class MoonShineServiceProvider extends ServiceProvider
             ])
             ->pages([
                 ...$config->getPages(),
+                TaskDetailPage::class,
             ])
         ;
     }

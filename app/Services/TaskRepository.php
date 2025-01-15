@@ -139,4 +139,20 @@ class TaskRepository
             ->mapWithKeys(fn(\stdClass $item) => [$item->status ?? MessageStatus::Pending->value => $item->count])
             ->sortKeys();
     }
+
+    /**
+     * @return Collection<value-of<MessageStatus>, int>
+     */
+    public function getPrefetchStats(string $taskId): Collection
+    {
+        $data = DB::table(TaskChat::make()->getTable())
+            ->select(DB::raw('count(*) as count, status'))
+            ->where('task_id', $taskId)
+            ->groupBy('prefetch_status')
+            ->get();
+
+        return $data
+            ->mapWithKeys(fn(\stdClass $item) => [$item->status ?? MessageStatus::Pending->value => $item->count])
+            ->sortKeys();
+    }
 }
