@@ -152,7 +152,7 @@ class TaskRepository
             ->get();
 
         return $data
-            ->mapWithKeys(fn(\stdClass $item) => [$item->status ?? MessageStatus::Pending->value => $item->count])
+            ->mapWithKeys(fn(\stdClass $item) => [$item->prefetch_status ?? MessageStatus::Pending->value => $item->count])
             ->sortKeys();
     }
 }
