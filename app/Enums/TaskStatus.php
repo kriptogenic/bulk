@@ -18,7 +18,7 @@ enum TaskStatus: string
     public function getColor(): Color
     {
         return match ($this) {
-            self::Pending => Color::INFO,
+            self::Creating, self::Pending => Color::INFO,
             self::InProgress => Color::SECONDARY,
             self::Completed => Color::SUCCESS,
             self::Cancelled => Color::WARNING,
