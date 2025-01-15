@@ -12,6 +12,7 @@ use App\Jobs\SaveTaskResultsJob;
 use App\Models\Task;
 use App\Services\Sender;
 use App\Services\TaskJobsWaiter;
+use App\Services\TaskProcessor;
 use App\Services\TaskRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -23,17 +24,14 @@ class WorkerCommand extends Command
     protected $signature = 'worker';
 
     protected $description = 'Command description';
-    private Sender $sender;
-    private TaskJobsWaiter $taskJobsWaiter;
+    private TaskProcessor $taskProcessor;
 
     public function handle(
-        Sender $sender,
         TaskRepository $taskRepository,
-        TaskJobsWaiter $taskJobsWaiter,
+        TaskProcessor $taskProcessor,
     ): void
     {
-        $this->sender = $sender;
-        $this->taskJobsWaiter = $taskJobsWaiter;
+        $this->taskProcessor = $taskProcessor;
 
         while (true) {
             $task = $taskRepository->reserveTask();
@@ -64,44 +62,10 @@ class WorkerCommand extends Command
         $chats = $task->chats->pluck('chat_id');
 
         if ($task->prefetch_type !== null) {
-            $this->taskJobsWaiter->start($task);
-            $results = $this->sender->send($task->token, SendMethod::SendChatAction, $chats, [
-                'action' => $task->prefetch_type->value,
-            ]);
-            $this->traverseAndSaveResults($results, $task, true);
-            $this->taskJobsWaiter->wait($task);
+            $this->taskProcessor->process($task, $chats, true);
             $chats = $task->chats()->where('prefetch_status', MessageStatus::Delivered)->pluck('chat_id');
         }
-        dump($chats);
 
-        $this->taskJobsWaiter->start($task);
-        $results = $this->sender->send(
-            $task->token,
-            $task->method,
-            $chats,
-            $task->params,
-        );
-        $this->traverseAndSaveResults($results, $task, false);
-        $this->taskJobsWaiter->wait($task);
-    }
-
-    private function traverseAndSaveResults(\Generator $results, Task $task, bool $isPrefetch): void
-    {
-        foreach ($results as $result) {
-            SaveTaskResultsJob::dispatch($task, $result, $isPrefetch);
-            if ($this->shouldUpdate($task->method)) {
-                $task->refresh();
-                if ($task->status !== TaskStatus::InProgress) {
-                    $this->error('Task canceled');
-                    throw new TaskCancelledException();
-                }
-            }
-        }
-    }
-
-    private function shouldUpdate(SendMethod $method): bool
-    {
-        $chance = min(100, $method->perSecond());
-        return mt_rand(1, 100) <= $chance;
+        $this->taskProcessor->process($task, $chats, false);
     }
 }
