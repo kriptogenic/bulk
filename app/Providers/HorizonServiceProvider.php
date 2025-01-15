@@ -30,7 +30,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewHorizon', function (?User $user): bool {
-            $user ??= MoonShineAuth::getModel();
+            $user ??= MoonShineAuth::getGuard()->user();
             if ($user === null) {
                 return false;
             }
