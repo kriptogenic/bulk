@@ -6,19 +6,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Facades\Socialite;
+use SocialiteProviders\Telegram\Provider;
 
 class TelegramAuthController extends Controller
 {
-    public function index()
-    {
-        Log::info('Telegram auth start');
-        return Socialite::driver('telegram')->redirect();
-    }
+    public function __construct(private Provider $provider) {}
 
-    public function store(Request $request)
+    public function __invoke(Request $request)
     {
-        $user = Socialite::driver('telegram')->user();
+        $user = $this->provider->user();
         Log::info('callbacked', [
             'user' => $user,
             'request' => $request->method(),

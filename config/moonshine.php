@@ -13,7 +13,6 @@ use MoonShine\Laravel\Forms\LoginForm;
 use MoonShine\Laravel\Http\Middleware\Authenticate;
 use MoonShine\Laravel\Http\Middleware\ChangeLocale;
 use MoonShine\Laravel\Pages\ErrorPage;
-use MoonShine\Laravel\Pages\LoginPage;
 use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
@@ -82,7 +81,7 @@ return [
     'pages' => [
         'dashboard' => App\MoonShine\Pages\Dashboard::class,
         'profile' => ProfilePage::class,
-        'login' => LoginPage::class,
+        'login' => App\MoonShine\Pages\LoginPage::class,
         'error' => ErrorPage::class,
     ],
 
