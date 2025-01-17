@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
+use App\Exceptions\RetryAfterException;
 use App\Exceptions\TaskCancelledException;
 use App\Jobs\SaveTaskResultsJob;
 use App\Models\Task;
@@ -19,7 +20,7 @@ class TaskProcessor
     ) {}
 
     /**
-     * @throws TaskCancelledException
+     * @throws TaskCancelledException|RetryAfterException
      */
     public function process(Task $task, Collection $chats, bool $isPrefetch): void
     {

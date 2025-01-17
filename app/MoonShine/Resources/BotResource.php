@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
-use App\Models\User;
-use App\Services\BotRepository;
-use App\Services\TelegramService;
 use App\Models\Bot;
+use App\Models\User;
+use App\Services\Repositories\BotRepository;
+use App\Services\TelegramService;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
+use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\MoonShineAuth;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Link;
-use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 use Sweet1s\MoonshineRBAC\Traits\WithRolePermissions;

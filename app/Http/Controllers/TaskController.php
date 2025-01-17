@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\SendMethod;
+use App\Enums\TaskStatus;
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Resources\TaskResource;
-use App\Services\TaskRepository;
+use App\Services\Repositories\TaskRepository;
 use App\Services\TelegramService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -43,7 +44,7 @@ final class TaskController extends Controller
             $request->validated('webhook'),
         );
 
-        return (new TaskResource($task))->additional([
+        return new TaskResource($task)->additional([
             'message' => 'Task queued',
         ]);
     }
@@ -53,5 +54,24 @@ final class TaskController extends Controller
         $this->validateUuid($id);
         $task = $this->taskRepository->getById($id);
         return new TaskResource($task);
+    }
+
+    public function destroy(string $id): TaskResource
+    {
+        $this->validateUuid($id);
+        $task = $this->taskRepository->getById($id);
+
+        if (!in_array($task, [
+            TaskStatus::Creating,
+            TaskStatus::Pending,
+            TaskStatus::InProgress,
+        ], true)) {
+            throw new BadRequestHttpException('Task can not be canceled.');
+        }
+
+        $this->taskRepository->setStatus($task, TaskStatus::Cancelled);
+        return new TaskResource($task)->additional([
+            'message' => 'Task cancelled successfully.',
+        ]);
     }
 }

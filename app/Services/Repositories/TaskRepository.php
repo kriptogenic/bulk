@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\Repositories;
 
 use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
 use App\Events\TaskFinishedEvent;
-use App\Jobs\SaveChatsBackgroundJob;
 use App\Models\Task;
 use App\Models\TaskChat;
 use Carbon\CarbonImmutable;
@@ -19,10 +18,14 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use SergiX44\Nutgram\Telegram\Properties\ChatAction;
+use stdClass;
 
 class TaskRepository
 {
-    public function __construct(private BotRepository $botRepository) {}
+    public function __construct(
+        private BotRepository $botRepository,
+        private TaskChatRepository $chatRepository,
+    ) {}
 
     /**
      * @param array<string, mixed> $params
@@ -50,28 +53,17 @@ class TaskRepository
         $task->webhook = $webhook;
         $task->status = count($chats) > TaskChat::BIG_BOTS_LIMIT ? TaskStatus::Creating : TaskStatus::Pending;
 
-
         DB::beginTransaction();
         $task->save();
-        $this->createChats($task, $chats);
+        $this->chatRepository->createChats($task, $chats);
         DB::commit();
         return $task;
-    }
-
-    private function createChats(Task $task, array $chats): void
-    {
-        if ($task->status === TaskStatus::Creating) {
-            SaveChatsBackgroundJob::dispatch($task, $chats);
-            return;
-        }
-        $chats = collect($chats)->map(fn(int|string $chat) => ['chat_id' => (int)$chat]);
-        $task->chats()->createMany($chats);
     }
 
     public function getById(string $id): Task
     {
         $task = Task::withCount('chats')->findOrFail($id);
-        if($task->chats_count <= TaskChat::BIG_BOTS_LIMIT) {
+        if ($task->chats_count <= TaskChat::BIG_BOTS_LIMIT) {
             $task->load('chats');
         }
         return $task;
@@ -136,7 +128,7 @@ class TaskRepository
             ->get();
 
         return $data
-            ->mapWithKeys(fn(\stdClass $item) => [$item->status ?? MessageStatus::Pending->value => $item->count])
+            ->mapWithKeys($this->transFormStats(...))
             ->sortKeys();
     }
 
@@ -146,13 +138,22 @@ class TaskRepository
     public function getPrefetchStats(string $taskId): Collection
     {
         $data = DB::table(TaskChat::make()->getTable())
-            ->select(DB::raw('count(*) as count, prefetch_status'))
+            ->select(DB::raw('count(*) as count, prefetch_status as status'))
             ->where('task_id', $taskId)
             ->groupBy('prefetch_status')
             ->get();
 
         return $data
-            ->mapWithKeys(fn(\stdClass $item) => [$item->prefetch_status ?? MessageStatus::Pending->value => $item->count])
+            ->mapWithKeys($this->transFormStats(...))
             ->sortKeys();
+    }
+
+    /**
+     * @param stdClass{status: ?value-of<MessageStatus>, count: int} $row
+     * @return array{value-of<MessageStatus>, int}
+     */
+    private function transFormStats(stdClass $row): array
+    {
+        return [$row->status ?? MessageStatus::Pending->value => $row->count];
     }
 }

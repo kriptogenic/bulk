@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Exception;
+use DomainException;
 
-class TaskCancelledException extends Exception {}
+class TaskCancelledException extends DomainException {}

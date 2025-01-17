@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Enums\MessageStatus;
 use App\Enums\SendMethod;
+use App\Exceptions\RetryAfterException;
 use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -19,16 +20,18 @@ use Throwable;
 
 class Sender
 {
-    const HTTPS_API_TELEGRAM_ORG = 'https://api.telegram.org/';
-    const ONE_SECOND = 1;
-    const SECONDS_TO_MICROSECONDS = 1_000_000;
-    private const ADDITIONAL_SLEEP_TIME = 10;
+    private const string HTTPS_API_TELEGRAM_ORG = 'https://api.telegram.org/';
+    private const int ONE_SECOND = 1;
+    private const int SECONDS_TO_MICROSECONDS = 1_000_000;
+    private const int ADDITIONAL_SLEEP_TIME = 10;
+    private const int RETRY_AFTER_LIMIT = 300;
 
     public function __construct(private Client $client) {}
 
     /**
      * @param Collection<non-negative-int, int> $chats
      * @return Generator<Collection<int, MessageStatus>>
+     * @throws RetryAfterException
      */
     public function send(
         string $token,
@@ -44,6 +47,7 @@ class Sender
 
     /**
      * @return Collection<int, MessageStatus> key is chat_id
+     * @throws RetryAfterException
      */
     private function sendInInterval(Collection $chats, string $endpoint, array $params): Collection
     {
@@ -107,6 +111,10 @@ class Sender
                         $result->put($chatId, MessageStatus::HaveNoRights);
                         return;
                     }
+                    if (str_contains($json->description, 'CHAT_WRITE_FORBIDDEN')) {
+                        $result->put($chatId, MessageStatus::HaveNoRights);
+                        return;
+                    }
                 }
 
                 if ($json->error_code === 429) {
@@ -132,6 +140,9 @@ class Sender
         $pool->promise()->wait();
 
         if ($retryAfter > 0) {
+            if ($retryAfter >= self::RETRY_AFTER_LIMIT) {
+                throw new RetryAfterException($retryAfter);
+            }
             sleep($retryAfter + self::ADDITIONAL_SLEEP_TIME);
         }
 
