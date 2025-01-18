@@ -8,6 +8,8 @@ use App\Enums\MessageStatus;
 use App\Enums\TaskStatus;
 use App\Jobs\SaveChatsBackgroundJob;
 use App\Models\Task;
+use App\Models\TaskChat;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -52,5 +54,13 @@ class TaskChatRepository
             )
             ->orderBy('chat_id')
             ->pluck('chat_id');
+    }
+
+    /**
+     * @return LengthAwarePaginator<array-key, TaskChat>
+     */
+    public function getChatsPaginate(Task $task): LengthAwarePaginator
+    {
+        return $task->chats()->paginate(TaskChat::BIG_BOTS_LIMIT);
     }
 }
