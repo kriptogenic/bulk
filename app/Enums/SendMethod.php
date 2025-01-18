@@ -14,6 +14,12 @@ enum SendMethod: string
     case CopyMessage = 'copyMessage';
     case ForwardMessage = 'forwardMessage';
     case SendPhoto = 'sendPhoto';
+    case SendVideo = 'sendVideo';
+    case SendAnimation = 'sendAnimation';
+    case SendAudio = 'sendAudio';
+    case SendVoice = 'sendVoice';
+    case SendVideoNote = 'sendVideoNote';
+    case SendDocument = 'sendDocument';
 
     /**
      * @return positive-int
@@ -31,8 +37,12 @@ enum SendMethod: string
         return match ($this) {
             self::SendMessage => ChatAction::TYPING,
             self::SendPhoto => ChatAction::UPLOAD_PHOTO,
+            self::SendVideo, self::SendAnimation => ChatAction::UPLOAD_VIDEO,
+            self::SendAudio, self::SendVoice => ChatAction::UPLOAD_VOICE,
+            self::SendVideoNote => ChatAction::UPLOAD_VIDEO_NOTE,
+            self::SendDocument => ChatAction::UPLOAD_DOCUMENT,
+            self::CopyMessage, self::ForwardMessage => null,
             self::SendChatAction => throw new RuntimeException('There is not prefetch action'),
-            default => null,
         };
     }
 }

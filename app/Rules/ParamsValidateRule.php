@@ -58,13 +58,8 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
             SendMethod::CopyMessage => [
                 ...$this->fromChatId(),
                 ...$this->messageId(),
-                ...$this->caption(),
-                ...$this->parseMode(),
-                ...$this->captionEntities(),
+                ...$this->baseAttachment(),
                 ...$this->showCaptionAboveMedia(),
-                ...$this->disableNotification(),
-                ...$this->protectContent(),
-                ...$this->replyMarkup(),
             ],
             SendMethod::ForwardMessage => [
                 ...$this->fromChatId(),
@@ -74,14 +69,37 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
             ],
             SendMethod::SendPhoto => [
                 ...$this->photo(),
-                ...$this->caption(),
-                ...$this->parseMode(),
-                ...$this->captionEntities(),
+                ...$this->baseAttachment(),
                 ...$this->showCaptionAboveMedia(),
                 ...$this->hasSpoiler(),
-                ...$this->disableNotification(),
-                ...$this->protectContent(),
-                ...$this->replyMarkup(),
+            ],
+            SendMethod::SendVideo => [
+                ...$this->video(),
+                ...$this->baseAttachment(),
+                ...$this->showCaptionAboveMedia(),
+                ...$this->hasSpoiler(),
+            ],
+            SendMethod::SendAnimation => [
+                ...$this->animation(),
+                ...$this->baseAttachment(),
+                ...$this->showCaptionAboveMedia(),
+                ...$this->hasSpoiler(),
+            ],
+            SendMethod::SendAudio => [
+                ...$this->audio(),
+                ...$this->baseAttachment(),
+            ],
+            SendMethod::SendVoice => [
+                ...$this->voice(),
+                ...$this->baseAttachment(),
+            ],
+            SendMethod::SendVideoNote => [
+                ...$this->videoNote(),
+                ...$this->baseAttachment(),
+            ],
+            SendMethod::SendDocument => [
+                ...$this->document(),
+                ...$this->baseAttachment(),
             ],
         };
         $validator = Validator::make([
@@ -213,6 +231,16 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
         ];
     }
 
+    private function hasSpoiler(): array
+    {
+        return [
+            'params.has_spoiler' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
+    }
+
     private function file(string $field): array
     {
         return [
@@ -229,13 +257,45 @@ class ParamsValidateRule implements DataAwareRule, ValidationRule
         return $this->file('photo');
     }
 
-    private function hasSpoiler(): array
+    private function video(): array
+    {
+        return $this->file('video');
+    }
+
+    private function animation(): array
+    {
+        return $this->file('animation');
+    }
+
+    private function audio(): array
+    {
+        return $this->file('audio');
+    }
+
+    private function voice(): array
+    {
+        return $this->file('voice');
+    }
+
+    private function videoNote(): array
+    {
+        return $this->file('video_note');
+    }
+
+    private function document(): array
+    {
+        return $this->file('document');
+    }
+
+    private function baseAttachment(): array
     {
         return [
-            'params.has_spoiler' => [
-                'nullable',
-                'boolean',
-            ],
+            ...$this->caption(),
+            ...$this->parseMode(),
+            ...$this->captionEntities(),
+            ...$this->disableNotification(),
+            ...$this->protectContent(),
+            ...$this->replyMarkup(),
         ];
     }
 }
