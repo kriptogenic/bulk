@@ -45,4 +45,21 @@ enum SendMethod: string
             self::SendChatAction => throw new RuntimeException('There is not prefetch action'),
         };
     }
+
+    public function documentationLink(): string
+    {
+        return match ($this) {
+            self::SendChatAction => 'https://core.telegram.org/bots/api#sendchataction',
+            self::SendMessage => 'https://core.telegram.org/bots/api#sendmessage',
+            self::CopyMessage => 'https://core.telegram.org/bots/api#copymessage',
+            self::ForwardMessage => 'https://core.telegram.org/bots/api#forwardmessage',
+            self::SendPhoto => 'https://core.telegram.org/bots/api#sendphoto',
+            self::SendVideo => 'https://core.telegram.org/bots/api#sendvideo',
+            self::SendAnimation => 'https://core.telegram.org/bots/api#sendanimation',
+            self::SendAudio => 'https://core.telegram.org/bots/api#sendaudio',
+            self::SendVoice => 'https://core.telegram.org/bots/api#sendvoice',
+            self::SendVideoNote => 'https://core.telegram.org/bots/api#sendvideonote',
+            self::SendDocument => 'https://core.telegram.org/bots/api#senddocument',
+        };
+    }
 }

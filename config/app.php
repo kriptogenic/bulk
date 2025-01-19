@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'github_repository' => 'https://github.com/kriptogenic/zaraz',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
