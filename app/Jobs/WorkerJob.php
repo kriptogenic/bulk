@@ -16,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class WorkerJob implements ShouldQueue
@@ -23,7 +24,7 @@ class WorkerJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $timeout = 0;
-    public null $retryAfter = null;
+    public int $retryAfter = PHP_INT_MAX;
 
     public function __construct(private Task $task) {}
 
@@ -32,6 +33,9 @@ class WorkerJob implements ShouldQueue
         TaskRepository $taskRepository,
         TaskChatRepository $taskChatRepository,
     ): void {
+        Log::info('Task worker started', [
+            'task' => $this->task->id,
+        ]);
         if (!in_array($this->task->status, [TaskStatus::Pending, TaskStatus::InProgress])) {
             return;
         }
@@ -49,7 +53,11 @@ class WorkerJob implements ShouldQueue
             $taskRepository->finishTask($this->task, null);
         } catch (RetryAfterException $e) {
             $delay = now()->addSeconds($e->retryAfter)->addMinute();
-            self::dispatch($this->task)->delay($delay);
+            Log::info('Task retry after', [
+                'task' => $this->task->id,
+                'retryAfter' => $e->retryAfter,
+            ]);
+            WorkerJob::dispatch($this->task)->delay($delay);
             return;
         } catch (Throwable $exception) {
             report($exception);

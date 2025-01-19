@@ -6,11 +6,13 @@ namespace App\MoonShine\Resources;
 
 use App\Enums\SendMethod;
 use App\Enums\TaskStatus;
+use App\Jobs\WorkerJob;
 use App\Models\Task;
 use App\Models\User;
 use App\MoonShine\Pages\TaskDetailPage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Laravel\MoonShineAuth;
+use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -62,6 +64,13 @@ class TaskResource extends ModelResource
                 fn(Builder $query) => $query->where('id', $user->id),
             ),
         );
+    }
+
+    public function rerun(MoonShineRequest $request): void
+    {
+        $task_id = $request->get('task_id');
+        $task = Task::findOrFail($task_id);
+        WorkerJob::dispatch($task);
     }
 
     protected function pages(): array

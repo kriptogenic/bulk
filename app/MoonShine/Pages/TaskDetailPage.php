@@ -14,6 +14,7 @@ use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Layout\Column;
 use MoonShine\UI\Components\Layout\Grid;
 use MoonShine\UI\Components\Link;
@@ -60,6 +61,18 @@ class TaskDetailPage extends DetailPage
     {
         return [
             ...parent::topLayer(),
+        ];
+    }
+
+    protected function getPageButtons(): array
+    {
+        return [
+            ...parent::getPageButtons(),
+            ActionButton::make('Rerun job')
+                ->withConfirm()
+                ->method('rerun', [
+                    'task_id' => $this->getResource()->getItem()->id,
+                ]),
         ];
     }
 
