@@ -84,8 +84,6 @@ class TaskResource extends ModelResource
             Text::make('Username', 'bot.username')
                 ->changePreview(fn(string $value) => Link::make('https://t.me/' . $value, '@' . $value)),
             Enum::make('Method')->attach(SendMethod::class),
-            Enum::make('Prefetch type')->attach(ChatAction::class),
-            Url::make('Webhook'),
             Enum::make('Status')->attach(TaskStatus::class),
 
             Date::make('Started At'),
