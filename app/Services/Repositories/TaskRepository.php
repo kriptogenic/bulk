@@ -12,6 +12,7 @@ use App\Models\Task;
 use App\Models\TaskChat;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -81,9 +82,17 @@ class TaskRepository
         $lock = Cache::lock('reserved_task', 20);
 
         try {
-            return $lock->block(15, function (): ?Task {
+            return $lock->block(15, static function (): Task {
                 $task = Task::withCount('chats')
                     ->where('status', TaskStatus::Pending)
+                    ->orWhere(fn(Builder $query): Builder
+                        => $query
+                        ->where('status', TaskStatus::Paused)
+                        ->where(fn(Builder $query): Builder
+                            => $query
+                            ->where('wait_until', '<', CarbonImmutable::now())
+                            ->orWhereNull('wait_until'),
+                        ))
                     ->orderBy('created_at')
                     ->firstOrFail();
 
@@ -155,5 +164,12 @@ class TaskRepository
     private function transFormStats(stdClass $row): array
     {
         return [$row->status ?? MessageStatus::Pending->value => $row->count];
+    }
+
+    public function waitUntil(Task $task, CarbonImmutable $waitUntil): void
+    {
+        $task->status = TaskStatus::Paused;
+        $task->wait_until = $waitUntil;
+        $task->save();
     }
 }

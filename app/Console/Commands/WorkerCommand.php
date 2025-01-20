@@ -25,7 +25,7 @@ class WorkerCommand extends Command
             }
 
             $this->info('Processing task ' . $task->id);
-            WorkerJob::dispatch($task);
+            WorkerJob::dispatchSync($task);
         }
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Task;
 use App\Services\Repositories\TaskChatRepository;
 use App\Services\Repositories\TaskRepository;
 use App\Services\TaskProcessor;
+use Carbon\CarbonImmutable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -52,21 +53,16 @@ class WorkerJob implements ShouldQueue
         } catch (TaskCancelledException) {
             $taskRepository->finishTask($this->task, null);
         } catch (RetryAfterException $e) {
-            $delay = now()->addSeconds($e->retryAfter)->addMinute();
+            $delay = CarbonImmutable::now()->addSeconds($e->retryAfter)->addMinute();
             Log::info('Task retry after', [
                 'task' => $this->task->id,
                 'retryAfter' => $e->retryAfter,
             ]);
-            WorkerJob::dispatch($this->task)->delay($delay);
+            $taskRepository->waitUntil($this->task, $delay);
             return;
         } catch (Throwable $exception) {
             report($exception);
             $taskRepository->finishTask($this->task, TaskStatus::Failed);
         }
     }
-
-    /**
-     * @throws TaskCancelledException
-     */
-    private function processTask(Task $task): void {}
 }

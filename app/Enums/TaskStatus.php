@@ -14,6 +14,7 @@ enum TaskStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
     case Failed = 'failed';
+    case Paused = 'paused';
 
     public function getColor(): Color
     {
@@ -21,7 +22,7 @@ enum TaskStatus: string
             self::Creating, self::Pending => Color::INFO,
             self::InProgress => Color::SECONDARY,
             self::Completed => Color::SUCCESS,
-            self::Cancelled => Color::WARNING,
+            self::Cancelled, self::Paused => Color::WARNING,
             self::Failed => Color::ERROR,
         };
     }
